@@ -95,7 +95,26 @@
 
 body {
   background: #ffffff;
+  
 }
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #605dec; /* Purple */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5a4fcf;
+}
+
 
 .dark {
   --background: oklch(0.145 0 0);

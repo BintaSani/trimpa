@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 
 interface UIContextType {
   isPromoVisible: boolean;
@@ -9,7 +9,12 @@ interface UIContextType {
 const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export const UIProvider = ({ children }: { children: ReactNode }) => {
-  const [isPromoVisible, setIsPromoVisible] = useState(true);
+  const [isPromoVisible, setIsPromoVisibleState] = useState(true);
+
+  // Wrap `setIsPromoVisible` in useCallback to make it stable
+  const setIsPromoVisible = useCallback((value: boolean) => {
+    setIsPromoVisibleState(value);
+  }, []);
 
   return (
     <UIContext.Provider value={{ isPromoVisible, setIsPromoVisible }}>

@@ -17,17 +17,17 @@ const SignupModal = ({ open, onClose }: { open: boolean; onClose: () => void }) 
       if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-400/50 flex items-center justify-center z-100">
-      <div className="bg-white p-6 xl:p-10 rounded-lg shadow-lg max-w-[568px] w-full relative">
+    <div className="fixed inset-0 bg-[var(--color-purple-blue)]/20 flex items-center justify-center z-100">
+      <div className="bg-white p-6 xl:p-10 rounded-lg shadow-lg max-w-[500px] w-full relative">
         {/* Close Button */}
         {/* Header */}
         <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold text-gray-600">Sign up for Tripma</h3>
-            <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+            <button onClick={onClose} className=" text-gray-500 hover:text-gray-600">
             <IoClose size={16} />
             </button>
         </div>
-        <p className="text-gray-400 text-sm mt-2">
+        <p className="text-gray-400 w-[90%] text-sm mt-2">
           Tripma is totally free to use. Sign up using your email address or phone number below to get started.
         </p>
 
