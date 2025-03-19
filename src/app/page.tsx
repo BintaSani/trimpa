@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <UIProvider>
       <div className="">
-        <div className="h-[100vh] flex flex-col">
+        <div className="h-[100vh] lg:mb-10 xl:mb-0 flex flex-col">
           <PromoBanner/>
           <Nav />
           <Hero/>

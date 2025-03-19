@@ -13,7 +13,7 @@ const Explore = (props: Props) => {
                 <IoArrowForward className='size-4'/>
                 </p>
             </div>
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-10'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10'>
                 <Card title={
                     <> Stay among the atolls in <span className='text-[var(--color-purple-blue)]'>Maldives</span></>
                     } 

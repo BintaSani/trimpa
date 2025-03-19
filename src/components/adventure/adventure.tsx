@@ -14,7 +14,7 @@ const Adventure = (props: Props) => {
                 <IoArrowForward className='size-4'/>
               </p>
             </div>
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-10'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10'>
                 <Card title={
                  <> The Bund, <span className='text-[var(--color-purple-blue)]'>Shanghai</span></>
                   } 
@@ -34,7 +34,16 @@ const Adventure = (props: Props) => {
                 price='$633' 
                 description="Step back in time in the Gion district"
               />
-                <div className='lg:col-span-3'>
+
+                <div className=' xl:hidden'>
+                    <Card 
+                      title={<>Tsavo East National Park, <span className='text-[var(--color-purple-blue)]'>Kenya</span></>} 
+                      image='/images/kenya.jpg' 
+                      price='$598' 
+                      description="Named after the Tsavo River, and opened in April 1984, Tsavo East National Park is one of the oldest parks in Kenya. It is located in the semi-arid Taru Desert."
+                    />
+                </div>
+                <div className='hidden xl:block xl:col-span-3'>
                     <Card 
                       title={<>Tsavo East National Park, <span className='text-[var(--color-purple-blue)]'>Kenya</span></>} 
                       image='/images/kenya.png' 
