@@ -27,12 +27,22 @@ const Explore = (props: Props) => {
                     price='$981' 
                     description="Morocco's Hispano-Moorish architecture blends influences from Berber culture, Spain, and contemporary artistic currents in the Middle East."
                 />
-                <Card 
-                title={<>Live traditionally in <span className='text-[var(--color-purple-blue)]'>Mongolia</span></>} 
-                image='/images/mongolia.png' 
-                price='$633' 
-                description="Traditional Mongolian yurts consists of an angled latticework of wood or bamboo for walls, ribs, and a wheel."
-                />
+                <div className='hidden lg:block lg:col-span-2 xl:hidden'>
+                    <Card 
+                    title={<>Live traditionally in <span className='text-[var(--color-purple-blue)]'>Mongolia</span></>} 
+                    image='/images/mongolia1.png' 
+                    price='$633' 
+                    description="Traditional Mongolian yurts consists of an angled latticework of wood or bamboo for walls, ribs, and a wheel."
+                    />
+                </div>
+                <div className='lg:hidden xl:block'>
+                    <Card 
+                    title={<>Live traditionally in <span className='text-[var(--color-purple-blue)]'>Mongolia</span></>} 
+                    image='/images/mongolia.png' 
+                    price='$633' 
+                    description="Traditional Mongolian yurts consists of an angled latticework of wood or bamboo for walls, ribs, and a wheel."
+                    />
+                </div>
             </div>
         </div>
     </div>
