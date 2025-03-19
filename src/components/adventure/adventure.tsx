@@ -38,7 +38,7 @@ const Adventure = (props: Props) => {
                 <div className=' xl:hidden'>
                     <Card 
                       title={<>Tsavo East National Park, <span className='text-[var(--color-purple-blue)]'>Kenya</span></>} 
-                      image='/images/kenya.jpg' 
+                      image='/images/kenyaa.png' 
                       price='$598' 
                       description="Named after the Tsavo River, and opened in April 1984, Tsavo East National Park is one of the oldest parks in Kenya. It is located in the semi-arid Taru Desert."
                     />
