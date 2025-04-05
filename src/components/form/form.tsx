@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import { MdFlightTakeoff, MdFlightLand } from "react-icons/md";
 import { DatePickerWithRange } from '../datePicker/datePicker';
 import { FaUser, FaPlus, FaMinus } from "react-icons/fa6";
+import { usePathname } from 'next/navigation';
 
 type Props = {}
 
@@ -15,6 +16,7 @@ const FlightSearch = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMenu, setIsMenu] = useState(false);
     const [isOpen1, setIsOpen1] = useState(false);
+    const path = usePathname();
   
     const options = [
       { value: "DXB", label: "Dubai (DXB)" },
@@ -33,7 +35,7 @@ const FlightSearch = (props: Props) => {
     
 
   return (
-    <div className="gap-[0.1px] xl:bg-white xl:shadow-lg rounded space-y-2 xl:space-y-0 xl:flex items-center xl:h-12 xl:w-[1200px] z-10 mx-auto">
+    <div className={`gap-[0.1px] xl:bg-white xl:shadow-lg rounded space-y-2 xl:space-y-0 xl:flex items-center xl:h-12 ${path === '/flights' ? "xl:w-[872px]" : "xl:w-[1200px] mx-auto"} z-10`}>
       {/* From Where */}
       <div className="relative flex-1 z-10">
         <button
@@ -101,7 +103,7 @@ const FlightSearch = (props: Props) => {
             >
             <FaUser className="text-[var(--color-grey-400)] mr-2 size-5" />
             <span className="text-[var(--color-grey-400)]">
-            {adults} Adult, {minors} Minor
+            {adults} Adult
             </span>
         </button>
         

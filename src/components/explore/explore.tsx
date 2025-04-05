@@ -7,9 +7,9 @@ const Explore = (props: Props) => {
   return (
     <div className='w-full mb-10'>
         <div className='px-6 lg:px-16 pt-12 pb-10 max-w-[1440px] mx-auto'>
-            <div className='flex text-sm justify-between items-center'>
+            <div className='flex text-sm text-gray-500 2xl:text-xl font-medium justify-between items-center'>
                 <h3 className='mb-5'>Explore unique <span className='bg-gradient-to-b from-teal-400 to-teal-700 text-transparent bg-clip-text '>places to stay</span></h3>
-                <p className='flex text-gray-300 items-center gap-2'>All  
+                <p className='flex text-gray-300 items-center font-normal gap-2'>All  
                 <IoArrowForward className='size-4'/>
                 </p>
             </div>

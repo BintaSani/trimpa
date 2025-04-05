@@ -8,9 +8,9 @@ const Adventure = (props: Props) => {
   return (
     <div className='w-full mb-10'>
         <div className='px-6 lg:px-16 pt-12 pb-10 max-w-[1440px] mx-auto'>
-            <div className='text-sm flex justify-between items-center'>
+            <div className='text-sm 2xl:text-xl font-medium flex justify-between text-gray-500 items-center'>
               <h3 className='mb-5'>Find your next adventure with these <span className='text-[var(--color-purple-blue)]'>flight deals</span></h3>
-              <p className='flex text-gray-300 items-center gap-2'>All  
+              <p className='flex text-gray-300 items-center gap-2 font-normal'>All  
                 <IoArrowForward className='size-4'/>
               </p>
             </div>
