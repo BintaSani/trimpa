@@ -6,17 +6,21 @@ import Dropdown from '@/components/dropdown/dropdown';
 import FlightList from '@/components/availableFlights/availableFlights';
 import { flights } from '@/components/availableFlights/flightData';
 import type { Flight } from '@/components/availableFlights/flightData';
+import { useFlightContext } from '../../../context/FlightContext';
 import PriceGrid from '@/components/price-grid/price-grid';
 import PriceHistory from '@/components/price-history/priceHistory';
+import Selectedflight from '@/components/selectedFlight/selectedflight';
 import Places from '@/components/placesToStay/placesToStay';
 import Suggestions from '@/components/suggestions/suggestions';
 import Footer from '@/components/footer/footer';
+import { useRouter } from 'next/navigation';
 
 type Props = {}
 
 const Flight = (props: Props) => {
+  const router = useRouter();
    // State to store the selected flight
-   const [selectedFlights, setSelectedFlights] = useState<Flight[]>([]);
+   const {selectedFlights, setSelectedFlights} = useFlightContext();
 
    // Function to handle when a row is clicked
    const handleFlightSelect = (flight: Flight) => {
@@ -28,7 +32,10 @@ const Flight = (props: Props) => {
     return sum + numericPrice;
   }, 0);
   
- 
+  const handleSaveAndClose = () => {
+    router.push('/passenger-info');
+  }
+
   return (
     <div className='w-full'>
       <Nav/>
@@ -55,39 +62,16 @@ const Flight = (props: Props) => {
           <div className='w-[40%] xl:w-[33.33%]'>
             {/* Show the selected flight details */}
             {selectedFlights.length > 0 ? (
-              <div className='w-full mt-12'>
-                <div className='border border-gray-300 rounded-md p-4 shadow-xs'>
-                  {selectedFlights.map((selectedFlight, index) => (
-                      <div key={index} className={`flex items-staret justify-between p-2 ${index > 0 ? 'border-t' : ''} `}>
-                        <div className="p-3 flex items-start  gap-3">
-                          <img src={selectedFlight.airlineLogo} alt={selectedFlight.airline} className="w-8 h-8" />
-                          <div className="flex flex-col">
-                              <span className='text-gray-900'>{selectedFlight.airline}</span>
-                              <span className='text-gray-400'>{selectedFlight.duration}</span>
-                          </div>
-                        </div>
-                        <div className='text-right font-normal'>
-                          <p className='text-gray-900'>{selectedFlight.duration} (+1d)</p>
-                          <p className='text-gray-900'>{selectedFlight.departureTime} - {selectedFlight.arrivalTime}</p>
-                          <p className='text-gray-400'>{selectedFlight.layover}</p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-                <div className='p-4 w-full flex items-center justify-end gap-10 '>
-                  <div className='space-y-1 font-medium'>
-                    <h5 className=' text-right text-gray-900'>Subtotal</h5>
-                    <h5 className=' text-right text-gray-900'>Taxes and Fees</h5>
-                    <h5 className=' text-right text-gray-900'>Total</h5>
-                  </div>
-                  <div className='space-y-1 font-medium'>
-                    <h5 className=' text-right text-gray-900'>$503</h5>
-                    <h5 className=' text-right text-gray-900'>$121</h5>
-                    <h5 className=' text-right text-gray-900'>${totalCost}</h5>
-                  </div>
-                </div>
-                
+              <>
+                <Selectedflight selectedFlights={selectedFlights} totalCost={totalCost}/>
+                <div className='pr-4 mt-4 w-full flex items-center justify-end'>
+                  <button 
+                  onClick={handleSaveAndClose}
+                  className="px-4 py-2 self-end border ml-auto border-[var(--color-purple-blue] text-[var(--color-purple-blue] rounded hover:bg-[var(--color-purple-blue)] hover:text-white">
+                      Save and close
+                  </button>
               </div>
+              </>
             )
             :
             <>

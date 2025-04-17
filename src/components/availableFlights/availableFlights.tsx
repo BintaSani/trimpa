@@ -25,7 +25,7 @@ const FlightTable = ({ flights, onFlightSelect }: FlightListProps) => {
         </thead>
         <tbody>
           {flights.map((flight, index) => (
-            <tr key={index} onClick={() => onFlightSelect(flight)} className="border-b py-3 text-gray-400 hover:bg-[#7C8DB010]">
+            <tr key={index} onClick={() => onFlightSelect(flight)} className="border-b py-3 text-gray-400 cursor-pointer hover:bg-[#7C8DB010]">
               <td className="p-3 flex items-center gap-3">
                 <img src={flight.airlineLogo} alt={flight.airline} className="w-8 h-8" />
                 <div className="flex flex-col">
