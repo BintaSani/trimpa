@@ -8,7 +8,7 @@ import { Cabin } from '../../components/plane/cabin';
 
 type Props = {}
 
-const Page = (props: Props) => {
+const SelectSeat = (props: Props) => {
   return (
     <div className='flex relative'>
       
@@ -30,4 +30,4 @@ const Page = (props: Props) => {
   )
 }
 
-export default Page
+export default SelectSeat;;

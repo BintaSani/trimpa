@@ -3,21 +3,14 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { GoArrowRight,  GoDotFill } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
-import { useModal } from '../../../context/Modalcontext';
 import { useSeat } from '../../../context/selectSeatContext';
 
 
 type Props = {}
 
 const SeatSelection = (props: Props) => {
-    const [selectedClass, setSelectedClass] = useState<'economy' | 'business'>('economy');
-    const { showUpgradeModal } = useModal();
-    const { selectedSeats } = useSeat();
+    const { selectedSeats, seatClass } = useSeat();
 
-    const handleModalClose = () => {
-        setSelectedClass('business')
-        showUpgradeModal(() => {});
-    };
     return (
     <div className=" relative bg-blur backdrop-blur-md h-screen flex flex-col justify-between">
         {/* Flight Header */}
@@ -47,9 +40,7 @@ const SeatSelection = (props: Props) => {
         <div className="mt-4 px-5 flex flex-grow space-x-10">
           {/* Economy */}
           <div className="w-1/2 cursor-pointer"
-             role="button"
-             tabIndex={0}
-            onClick={() => setSelectedClass('economy')}>
+            >
             <Image 
             width={100} 
             height={100} 
@@ -61,7 +52,7 @@ const SeatSelection = (props: Props) => {
             className="w-full mb-4 mt-8"/>
             <div className="flex items-center mb-2">
               <h4 className="text-lg font-medium text-gray-600">Economy</h4>
-              {selectedClass === 'economy' && (
+              {seatClass === 'economy' && (
                 <span className="ml-2 px-2 py-1 bg-gradient-to-b from-[#605DEC] to-[#2A26D9] text-white text-sm font-bold rounded">Selected</span>
              )}
             </div>
@@ -78,9 +69,7 @@ const SeatSelection = (props: Props) => {
 
           {/* Business */}
           <div className="w-1/2 cursor-pointer"
-             role="button"
-             tabIndex={1}
-            onClick={handleModalClose}>
+            >
             <Image 
             width={100} 
             height={100} 
@@ -92,7 +81,7 @@ const SeatSelection = (props: Props) => {
             className="w-full mb-4 mt-8"/>
             <div className="flex items-center mb-2">
               <h3 className="text-lg font-medium text-gray-600">Business class</h3>
-              {selectedClass === 'business' && (
+              {seatClass === 'business' && (
                   <span className="ml-2 px-2 py-1 bg-gradient-to-b from-[#5CD6C0] to-[#22C3A6] text-white text-sm font-bold rounded">Selected</span>
               )}
             </div>

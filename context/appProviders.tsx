@@ -5,6 +5,7 @@ import { UIProvider } from './uicontext';
 import { FlightProvider } from './FlightContext';
 import { ModalProvider } from './Modalcontext';
 import { SeatProvider } from './selectSeatContext';
+import { PaymentProvider } from './paymentContext';
 
 
 const AppProviders = ({ children }: { children: ReactNode }) => {
@@ -13,7 +14,9 @@ const AppProviders = ({ children }: { children: ReactNode }) => {
       <FlightProvider>
         <ModalProvider> 
           <SeatProvider> 
-            {children}
+            <PaymentProvider>
+              {children}
+            </PaymentProvider>  
           </SeatProvider>
         </ModalProvider>
       </FlightProvider>

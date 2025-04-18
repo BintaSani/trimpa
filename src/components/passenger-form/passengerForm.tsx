@@ -93,7 +93,7 @@ const PassengerForm = (props: Props) => {
                     <button className="px-4 py-2 border border-[var(--color-purple-blue] text-[var(--color-purple-blue] rounded hover:bg-[var(--color-purple-blue)] hover:text-white">
                     Save and close
                     </button>
-                    <button className="px-4 py-2 border-gray-400 bg-gray-200 text-gray-500 rounded ">
+                    <button className="px-4 py-2 border-gray-400 bg-[#605DEC] text-gray-100 rounded " disabled>
                     Select seats
                     </button>
                 </div>
