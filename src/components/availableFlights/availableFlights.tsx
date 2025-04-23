@@ -1,5 +1,6 @@
 import React from "react";
 import { Flight } from "./flightData";
+import Image from "next/image";
 
 interface FlightListProps {
   flights: Flight[]; 
@@ -12,7 +13,7 @@ const FlightTable = ({ flights, onFlightSelect }: FlightListProps) => {
     return <div className="animate-pulse">Loading flights...</div>; 
   }
   return (
-    <div className="w-full max-w-[872px] mx-auto h-[456px] overflow-auto bg-white border shadow-lg rounded-lg p-4">
+    <div className="w-full max-w-[872px] mx-auto h-[456px] whitespace-nowrap overflow-auto bg-white border shadow-lg rounded-lg p-4">
       <table className="w-full border-collapse">
         <thead className="hidden">
           <tr className="bg-gray-200">
@@ -27,13 +28,13 @@ const FlightTable = ({ flights, onFlightSelect }: FlightListProps) => {
           {flights.map((flight, index) => (
             <tr key={index} onClick={() => onFlightSelect(flight)} className="border-b py-3 text-gray-400 cursor-pointer hover:bg-[#7C8DB010]">
               <td className="p-3 flex items-center gap-3">
-                <img src={flight.airlineLogo} alt={flight.airline} className="w-8 h-8" />
+                <Image width={32} height={32} src={flight.airlineLogo} alt={flight.airline} className="w-8 h-8" />
                 <div className="flex flex-col">
                     <span className="text-gray-900">{flight.duration}</span>
                     <span>{flight.airline}</span>
                 </div>
               </td>
-              <td className="p-3 text-gray-900">
+              <td className="p-3  text-gray-900">
                 {flight.departureTime} - {flight.arrivalTime}
               </td>
               <td className="p-3">

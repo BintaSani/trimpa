@@ -13,7 +13,7 @@ export interface Flight {
  export const flights: Flight[] = [
     {
       airline: "Hawaiian Airlines",
-      airlineLogo: "/logos/hawaiian.png",
+      airlineLogo: "/images/airline.png",
       duration: "16h 45m",
       departureTime: "7:00AM",
       arrivalTime: "4:15PM",
@@ -24,7 +24,7 @@ export interface Flight {
     },
     {
       airline: "Japan Airlines",
-      airlineLogo: "/logos/japan.png",
+      airlineLogo: "/images/airline.png",
       duration: "18h 22m",
       departureTime: "7:35 AM",
       arrivalTime: "12:15 PM",
@@ -35,7 +35,7 @@ export interface Flight {
     },
     {
       airline: "Hawaiian Airlines",
-      airlineLogo: "/logos/hawaiian.png",
+      airlineLogo: "/images/airline.png",
       duration: "18h 04m",
       departureTime: "8:20AM",
       arrivalTime: "2:15PM",
@@ -46,7 +46,7 @@ export interface Flight {
     },
     {
       airline: "Delta",
-      airlineLogo: "/logos/delta.png",
+      airlineLogo: "/images/airline.png",
       duration: "18h 52m",
       departureTime: "9:47 AM",
       arrivalTime: "4:15 PM",
@@ -57,7 +57,7 @@ export interface Flight {
     },
     {
       airline: "Hawaiian Airlines",
-      airlineLogo: "/logos/hawaiian.png",
+      airlineLogo: "/images/airline.png",
       duration: "16h 05m",
       departureTime: "11:15 AM",
       arrivalTime: "7:45 PM",
@@ -68,7 +68,7 @@ export interface Flight {
     },
     {
       airline: "Hawaiian Airlines",
-      airlineLogo: "/logos/hawaiian.png",
+      airlineLogo: "/images/airline.png",
       duration: "15h 45m",
       departureTime: "10:55 AM",
       arrivalTime: "8:15 PM",
@@ -79,7 +79,7 @@ export interface Flight {
     },
     {
       airline: "Delta",
-      airlineLogo: "/logos/delta.png",
+      airlineLogo: "/images/airline.png",
       duration: "18h 20m",
       departureTime: "1:00 PM",
       arrivalTime: "9:15 PM",
@@ -90,7 +90,7 @@ export interface Flight {
     },
     {
       airline: "EVA Air",
-      airlineLogo: "/logos/eva.png",
+      airlineLogo: "/images/airline.png",
       duration: "18h 55m",
       departureTime: "2:15 PM",
       arrivalTime: "11:15 PM",
@@ -101,7 +101,7 @@ export interface Flight {
     },
     {
       airline: "Korean Air",
-      airlineLogo: "/logos/korean.png",
+      airlineLogo: "/images/airline.png",
       duration: "22h 37m",
       departureTime: "6:45 PM",
       arrivalTime: "7:15 PM",
@@ -112,7 +112,7 @@ export interface Flight {
     },
     {
       airline: "Japan Airlines",
-      airlineLogo: "/logos/japan.png",
+      airlineLogo: "/images/airline.png",
       duration: "20h 23m",
       departureTime: "7:00AM",
       arrivalTime: "4:15PM",
@@ -123,7 +123,7 @@ export interface Flight {
     },
     {
       airline: "Japan Airlines",
-      airlineLogo: "/logos/japan.png",
+      airlineLogo: "/images/airline.png",
       duration: "16h 45m",
       departureTime: "7:00AM",
       arrivalTime: "4:15PM",
@@ -134,7 +134,7 @@ export interface Flight {
     },
     {
       airline: "EVA Air",
-      airlineLogo: "/logos/eva.png",
+      airlineLogo: "/images/airline.png",
       duration: "16h 10m",
       departureTime: "7:00AM",
       arrivalTime: "4:15PM",
@@ -145,7 +145,7 @@ export interface Flight {
     },
     {
       airline: "Korean Air",
-      airlineLogo: "/logos/korean.png",
+      airlineLogo: "/images/airline.png",
       duration: "14h 37m",
       departureTime: "7:20AM",
       arrivalTime: "1:15PM",
@@ -156,7 +156,7 @@ export interface Flight {
     },
     {
       airline: "Air France",
-      airlineLogo: "/logos/airfrance.png",
+      airlineLogo: "/images/airline.png",
       duration: "19h 45m",
       departureTime: "9:00AM",
       arrivalTime: "1:15PM",
@@ -167,7 +167,7 @@ export interface Flight {
     },
     {
       airline: "Emirates",
-      airlineLogo: "/logos/emirates.png",
+      airlineLogo: "/images/airline.png",
       duration: "16h 55m",
       departureTime: "7:10AM",
       arrivalTime: "4:35PM",

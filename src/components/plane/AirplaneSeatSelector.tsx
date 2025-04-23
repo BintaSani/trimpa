@@ -9,8 +9,8 @@ export const AirplaneSeatSelector: React.FC = () => {
         href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap"
         rel="stylesheet"
       />
-      <main className="absolute top-10  flex justify-center items-center min-h-screen">
-        <div className="relative w-full max-w-[2124px] max-md:scale-[0.8] max-sm:scale-50">
+      <main className="absolute w-full 2xl:w-auto lg:top-10 flex justify-center items-center min-h-screen">
+        <div className="relative w-full max-w-[2124px] ">
           <AirplaneBody />
           
         </div>

@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { IoMenu, IoClose } from "react-icons/io5";
 import SignupModal from '../modal/signup';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type Props = {}
 
@@ -68,17 +69,28 @@ const Nav = (props: Props) => {
             Packages{" "}
           </div>
         </Link>
-        <button  onClick={() => setIsModalOpen(true)} className="hover:scale-105 p-2.5 flex flex-row gap-2.5 items-center justify-start shrink-0 relative overflow-hidden">
+        {pathname === '/flight-summary' && 
+        <Link href='/my-trips' className="hover:scale-105 p-2.5 flex flex-row gap-2.5 items-center justify-start shrink-0 relative overflow-hidden">
+        <div className={`
+           text-center relative flex items-center justify-center`}>
+            My Trips{" "}
+          </div>
+        </Link>
+        }
+        {pathname === '/flight-summary' && 
+          <Image width={40} height={40} src='/images/airline.png' alt='flightlogo' className="w-10 h-10" />
+        }
+        {pathname !== '/flight-summary' && <button  onClick={() => setIsModalOpen(true)} className="hover:scale-105 p-2.5 flex flex-row gap-2.5 items-center justify-start shrink-0 relative overflow-hidden">
           <div className={`${ pathname === '/signIn' ? 'text-[var(--color-purple-blue)]' : ''}
            text-center relative flex items-center justify-center`}>
             Sign in{" "}
           </div>
-        </button>
-        <button  onClick={() => setIsModalOpen(true)} className="hover:scale-105 bg-[var(--color-purple-blue)] rounded pt-3 px-5 pb-3 flex flex-row gap-2 items-center justify-start shrink-0 h-12 relative overflow-hidden">
+        </button>}
+       {pathname !== '/flight-summary' &&  <button  onClick={() => setIsModalOpen(true)} className="hover:scale-105 bg-[var(--color-purple-blue)] rounded pt-3 px-5 pb-3 flex flex-row gap-2 items-center justify-start shrink-0 h-12 relative overflow-hidden">
           <div className="text-[var(--color-grey-100)] text-left relative flex items-center justify-start">
             Sign up{" "}
           </div>
-        </button>
+        </button>}
       </div>
       <SignupModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

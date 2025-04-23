@@ -39,13 +39,13 @@ const PaymentForm = () => {
             <input type="checkbox" name="billingSame" checked={cardInfo.billingSame} onChange={handleInput} className="mr-2 text-base" />
             Billing address is same as Passenger 1
           </label>
-          <div className="flex flex-col gap-6 w-[70%]">
+          <div className="flex flex-col gap-6 lg:w-[70%]">
             <input name="name" onChange={handleInput} value={cardInfo.name} placeholder="Name on card" className="input" />
             <input name="number" onChange={handleInput} value={cardInfo.number} placeholder="Card number" className="input" />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <input name="expiry" onChange={handleInput} value={cardInfo.expiry} placeholder="Expiration date" className="input" />
+                    <input name="expiry" onChange={handleInput} value={cardInfo.expiry} placeholder="Expiration date" className="input w-full" />
                     <label htmlFor="expiry" className='text-xs text-gray-600'>MM/YY</label>
                 </div>
                 <input name="ccv" onChange={handleInput} value={cardInfo.ccv} placeholder="CCV" className="input h-fit" />
@@ -60,7 +60,7 @@ const PaymentForm = () => {
         Save card and create account for later
       </label>
         
-      <div className="flex flex-col gap-6 w-[70%]">
+      <div className="flex flex-col gap-6 lg:w-[70%]">
         <input name="email" onChange={handleInput} value={cardInfo.email} placeholder="Email address or phone number" className="input" />
         <input name="password" onChange={handleInput} value={cardInfo.password} placeholder="Password" type="password" className="input" />
 
@@ -70,17 +70,17 @@ const PaymentForm = () => {
             <hr className="flex-grow border-gray-200" />
         </div>
 
-        <button type='button' className="border rounded border-[#605DEC] bg-white text-[#605DEC] py-[11.5px] px-20 w-full flex">
+        <button type='button' className="border rounded border-[#605DEC] hover:bg-[#605DEC] hover:text-gray-100 bg-white text-[#605DEC] py-[11.5px] px-5 text-lg w-full flex items-center text-center">
             <FcGoogle className="size-[18px]" />
-            Sign up with Google
+            <p className='mx-auto'>Sign up with Google</p>
         </button>
-        <button type='button' className="border rounded border-[#605DEC] bg-white text-[#605DEC] py-[11.5px] px-20 w-full flex mt-2">
+        <button type='button' className="border rounded border-[#605DEC] hover:bg-[#605DEC] hover:text-gray-100 bg-white text-[#605DEC] py-[11.5px] px-5 text-lg w-full flex items-center text-center mt-2">
             <BsApple className="size-[18px] text-gray-900" />
-            Continue with Apple
+            <p className='mx-auto'>Continue with Apple</p>
         </button>
-        <button type='button' className="border rounded border-[#605DEC] bg-white text-[#605DEC] py-[11.5px] px-20 w-full flex mt-2">
+        <button type='button' className="border rounded border-[#605DEC] hover:bg-[#605DEC] hover:text-gray-100 bg-white text-[#605DEC] py-[11.5px] px-5 text-lg w-full flex items-center text-center mt-2">
             <RiFacebookBoxFill className="size-[18px]" />
-            Continue with Facebook
+            <p className='mx-auto'>Continue with Facebook</p>
         </button>
       </div>
 
@@ -91,7 +91,7 @@ const PaymentForm = () => {
         </p>
       </div>
 
-      <div className="flex gap-4 text-large mt-14">
+      <div className="flex gap-4 text-sm md:text-large mt-14">
         <button className="px-5 py-[11.5px] rounded border border-[#605DEC] text-[#605DEC]">Back to seat select</button>
         <button className="px-5 py-[11.5px] rounded bg-[#605DEC] text-gray-100" disabled>Confirm and pay</button>
       </div>

@@ -17,7 +17,7 @@ const Dropdown = ({ label, options }: { label: string; options: string[] }) => {
   return (
     <div className="relative">
       <button
-        className="px-4 py-2 bg-white border text-gray-900 border-grey-300 rounded-md flex items-center gap-1 shadow-md hover:bg-gray-100"
+        className="px-4 py-2 bg-white border text-gray-900 whitespace-nowrap border-grey-300 rounded-md flex items-center gap-1 shadow-md hover:bg-gray-100"
         onClick={() => setIsOpen(!isOpen)}
       >
         {label}
@@ -42,7 +42,7 @@ const Dropdown = ({ label, options }: { label: string; options: string[] }) => {
 
 export default function FilterBar() {
   return (
-    <div className="flex gap-2 mt-5 rounded-md">
+    <div className="flex flex-wrap gap-2 mt-5 rounded-md">
       {dropdownOptions.map((dropdown, index) => (
         <Dropdown key={index} label={dropdown.label} options={dropdown.options} />
       ))}

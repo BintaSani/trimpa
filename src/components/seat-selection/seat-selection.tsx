@@ -4,15 +4,20 @@ import Image from 'next/image';
 import { GoArrowRight,  GoDotFill } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
 import { useSeat } from '../../../context/selectSeatContext';
+import { useRouter } from 'next/navigation';
 
 
 type Props = {}
 
 const SeatSelection = (props: Props) => {
     const { selectedSeats, seatClass } = useSeat();
+    const router = useRouter();
+    const handleNextFlight = () => {
+      router.push('/payment');
+    }
 
     return (
-    <div className=" relative bg-blur backdrop-blur-md h-screen flex flex-col justify-between">
+    <div className=" relative bg-blur backdrop-blur-md md:h-screen flex flex-col justify-between">
         {/* Flight Header */}
         <div className="grid grid-cols-3 text-white">
           <div className="bg-[#1e1f3a] px-6 py-5 flex items-center justify-between ">
@@ -37,9 +42,9 @@ const SeatSelection = (props: Props) => {
         </div>
 
         {/* Seat Classes */}
-        <div className="mt-4 px-5 flex flex-grow space-x-10">
+        <div className="mt-4 px-5 flex flex-col md:flex-row flex-grow space-x-10">
           {/* Economy */}
-          <div className="w-1/2 cursor-pointer"
+          <div className="md:w-1/2 cursor-pointer"
             >
             <Image 
             width={100} 
@@ -68,7 +73,7 @@ const SeatSelection = (props: Props) => {
           </div>
 
           {/* Business */}
-          <div className="w-1/2 cursor-pointer"
+          <div className="md:w-1/2 cursor-pointer"
             >
             <Image 
             width={100} 
@@ -101,31 +106,31 @@ const SeatSelection = (props: Props) => {
         </div>
 
         {/* Passenger Footer */}
-        <div className="flex px-6 bg-[#CBD4E6]/30 items-center justify-between border-t py-4 mt-4 text-sm text-gray-600">
-          <div>
-            <p className="text-sm text-gray-400 font-semibold">Passenger 1</p>
-            <p className="text-gray-600 text-lg">Sofia Knowles</p>
-          </div>
-          <div className="text-left">
-            <p className='text-sm text-gray-400'>Seat number</p>
-            <p className="text-gray-600 text-lg ">{selectedSeats.length > 0 ? (
-              <span className="flex flex-wrap gap-2">
-                {selectedSeats.map((seat) => (
-                  <span
-                    key={seat}
-                    className=""
-                  >
-                    {seat}
-                  </span>
-                ))}
-              </span>
-            ) : '--'}</p>
-          </div>
-          <div className="flex space-x-4">
+        <div className="flex flex-col md:flex-row px-4 md:px-6 bg-[#CBD4E6]/30 md:items-center md:justify-between border-t py-4 mt-4 text-sm text-gray-600">
+            <div>
+              <p className="text-sm text-gray-400 font-semibold">Passenger 1</p>
+              <p className="text-gray-600 text-lg">Sofia Knowles</p>
+            </div>
+            <div className="text-left mt-2 md:mt-0">
+              <p className='text-sm text-gray-400'>Seat number</p>
+              <p className="text-gray-600 text-lg ">{selectedSeats.length > 0 ? (
+                <span className="flex flex-wrap gap-2">
+                  {selectedSeats.map((seat) => (
+                    <span
+                      key={seat}
+                      className=""
+                    >
+                      {seat}
+                    </span>
+                  ))}
+                </span>
+              ) : '--'}</p>
+            </div>
+          <div className="flex justify-between mt-2 md:mt-0 md:justify-normal md:space-x-4 w-full md:w-auto">
             <button className="px-5 py-[13px] text-base border border-[#605DEC] text-[#605DEC] rounded">
               Save and close
             </button>
-            <button className="px-5 py-[13px] text-base bg-gray-400/30  text-gray-400 border-gray-400 rounded">
+            <button onClick={handleNextFlight} className="px-5 py-[13px] text-base bg-gray-400/30  text-gray-400 border-gray-400 rounded">
               Next flight
             </button>
           </div>

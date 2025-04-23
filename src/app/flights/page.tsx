@@ -39,11 +39,11 @@ const Flight = (props: Props) => {
   return (
     <div className='w-full'>
       <Nav/>
-      <div className='mt-10 px-16 max-w-[1440px] mx-auto'>
+      <div className='mt-10 p-6 md:px-16 max-w-[1440px] mx-auto'>
         <FlightSearch/>
         <Dropdown/>
-        <div className='w-full mt-12 flex items-start gap-10'>
-          <div className='w-[60%] xl:w-[66.62%]'>
+        <div className='w-full mt-12 flex flex-col lg:flex-row items-start gap-10'>
+          <div className='w-full lg:w-[60%] xl:w-[66.62%]'>
             <h4 className='mb-5 text-sm 2xl:text-xl font-medium text-gray-500'>Choose a <span className='text-[var(--color-purple-blue)]'>departing</span> flight</h4>
             <FlightList 
               flights={flights}
@@ -52,14 +52,14 @@ const Flight = (props: Props) => {
             <div className='flex items-center justify-end mt-6'>
               <button className='text-[var(--color-purple-blue)] border hover:bg-[var(--color-purple-blue)] hover:text-white rounded border-[var(--color-purple-blue)] text-sm px-5 py-[11.5px] 2xl:text-lg'>Show all flights</button>
             </div>
-            <div className='w-full bg-[url("/images/map.png")] mt-12 flex items-center justify-center h-[171px]'>
-              <div className='w-[227px] flex items-center text-[#1513A0] mr-5 mt-12  font-bold text-xs justify-between'>
+            <div className='w-full bg-[url("/images/map.png")] bg-contain md:bg-fit 2xl:bg-cover h-[100px] bg-no-repeat mt-12 flex items-center justify-center md:h-[161px] xl:h-[171px]'>
+              <div className='w-[110px] md:w-[180px] xl:w-[227px] text-[9px] flex items-center text-[#1513A0] mr-8 md:mt-7 lg:-mt-3 xl:mt-4 2xl:mt-12 font-bold md:text-xs justify-between'>
                 <p>NRT</p>
                 <p>SFO</p>
               </div>
             </div>
           </div>
-          <div className='w-[40%] xl:w-[33.33%]'>
+          <div className='w-full lg:w-[40%] xl:w-[33.33%]'>
             {/* Show the selected flight details */}
             {selectedFlights.length > 0 ? (
               <>

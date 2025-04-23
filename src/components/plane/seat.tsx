@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useSeat } from '../../../context/selectSeatContext';
 import { FaCheck } from "react-icons/fa";
 import { useModal } from '../../../context/Modalcontext';
@@ -17,6 +17,16 @@ export const SeatRow: React.FC<SeatRowProps> = ({ rowNumber }) => {
     String.fromCharCode(65 + i)
   );
   const { showUpgradeModal } = useModal();
+   const [xs, setXs] = useState(false);
+  
+    useEffect(() => {
+      // Only runs on the client
+      const checkScreen = () => setXs(window.innerWidth < 400);
+  
+      checkScreen(); // Initial check
+      window.addEventListener('resize', checkScreen);
+      return () => window.removeEventListener('resize', checkScreen);
+    }, []);
 
   const half = Math.floor(seatCount / 2);
   const leftSeats = seatLabels.slice(0, half);
@@ -41,7 +51,7 @@ export const SeatRow: React.FC<SeatRowProps> = ({ rowNumber }) => {
         type="button"
         key={label}
         className={`flex items-center justify-center transition-colors duration-300
-          ${isBusinessClass ? "w-8 h-9" : "w-[26px] h-8"}
+          ${isBusinessClass ? "w-8 h-5 md:h-9 lg:h-6 xl:h-9" : "w-[26px] h-5 md:h-8 lg:h-6 xl:h-8"}
           rounded cursor-pointer
           ${isSelected
             ? "bg-red-500 text-white"
@@ -59,7 +69,7 @@ export const SeatRow: React.FC<SeatRowProps> = ({ rowNumber }) => {
   
 
   return (
-    <div className={`flex ${isBusinessClass ? "gap-3 space-y-0.5" : "gap-1"} items-center justify-center px-1 py-1.5 w-full`}>
+    <div className={`flex ${isBusinessClass ? "gap-3 lg:space-y-0.5" : "gap-1"} items-center justify-center px-1 ${xs ? 'py-0' : 'py-[1px]'} md:py-[5.7px] lg:py-0 xl:py-1 2xl:py-1.5 w-full`}>
       {/* Left side seats */}
       {leftSeats.map(renderSeat)}
 

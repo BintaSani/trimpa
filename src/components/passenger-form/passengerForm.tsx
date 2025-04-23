@@ -17,19 +17,24 @@ const PassengerForm = (props: Props) => {
     };
   return (
     <div className='w-full'>
-        <form className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
+        <form className="w-full grid grid-cols-3 gap-4">
           
             <h4 className='text-gray-600 mt-9 mb-6 text-lg font-medium col-span-3'>Passenger 1 (Adult)</h4>
             {/* Row 1 */}
-            <input type="text" placeholder="First name*" className="input col-span-1" />
-            <input type="text" placeholder="Middle" className="input col-span-1" />
-            <input type="text" placeholder="Last name*" className="input col-span-1" />
+            <div className='col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4'>
+                <input type="text" placeholder="First name*" className="input col-span-1" />
+                <input type="text" placeholder="Middle" className="input col-span-1" />
+                <input type="text" placeholder="Last name*" className="input col-span-1" />
+            </div>
 
             {/* Row 2 */}
-            <input type="text" placeholder="Suffix" className="input h-fit col-span-1" />
-            <div className="col-span-2">
-                <input type="text" placeholder="Date of birth*" className="input w-[60%]" />
-                <p className="text-sm text-gray-500 mt-1">MM/DD/YY</p>
+            <div className='col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4'>
+
+                <input type="text" placeholder="Suffix" className="input h-fit col-span-1" />
+                <div className="col-span-1 md:col-span-2">
+                    <input type="text" placeholder="Date of birth*" className="input w-full md:w-[60%]" />
+                    <p className="text-sm text-gray-500 mt-1">MM/DD/YY</p>
+                </div>
             </div>
             <div className='col-span-3 lg:w-[95%] grid grid-cols-1 md:grid-cols-2 gap-4'>
                 {/* Row 3 */}

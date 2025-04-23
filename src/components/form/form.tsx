@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import { MdFlightTakeoff, MdFlightLand } from "react-icons/md";
 import { DatePickerWithRange } from '../datePicker/datePicker';
 import { FaUser, FaPlus, FaMinus } from "react-icons/fa6";
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 type Props = {}
 
@@ -16,6 +16,7 @@ const FlightSearch = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMenu, setIsMenu] = useState(false);
     const [isOpen1, setIsOpen1] = useState(false);
+    const router = useRouter();
     const path = usePathname();
   
     const options = [
@@ -32,14 +33,22 @@ const FlightSearch = (props: Props) => {
             setIsOpen1(false);
         }
     };
+
+    const handleSearch = () => {
+        if (from && to ) {
+            router.push(`/flights`);
+        } else {
+            alert("Please fill in all fields");
+        }
+    }
     
 
   return (
-    <div className={`gap-[0.1px] xl:bg-white xl:shadow-lg rounded space-y-2 xl:space-y-0 xl:flex items-center xl:h-12 ${path === '/flights' ? "xl:w-[872px]" : "xl:w-[1200px] mx-auto"} z-10`}>
+    <div className={`gap-[0.1px] xl:bg-white xl:shadow-lg rounded space-y-2 lg:space-y-0 lg:flex items-center xl:h-12 ${path === '/flights' ? "lg:w-[872px]" : "xl:w-[1200px] lg:w-full mx-auto"} z-10`}>
       {/* From Where */}
       <div className="relative flex-1 z-10">
         <button
-            className="w-full flex items-center border focus:ring-[var(--color-purple-blue)] focus:ring-1 border-gray-300 rounded-l-md p-3 cursor-pointer bg-white"
+            className="w-full flex items-center border focus:ring-[var(--color-purple-blue)] whitespace-nowrap focus:ring-1 border-gray-300 rounded-l-md p-3 cursor-pointer bg-white"
             onClick={() => setIsOpen(!isOpen)}
         >
             <MdFlightTakeoff className="text-[var(--color-grey-400)] mr-2 size-5" />
@@ -66,7 +75,7 @@ const FlightSearch = (props: Props) => {
       {/* To Where */}
       <div className="relative flex-1">
         <button
-            className=" w-full focus:ring-[var(--color-purple-blue)] focus:ring-1 flex items-center border border-gray-300  p-3 cursor-pointer bg-white"
+            className=" w-full focus:ring-[var(--color-purple-blue)] whitespace-nowrap focus:ring-1 flex items-center border border-gray-300  p-3 cursor-pointer bg-white"
             onClick={() => setIsOpen1(!isOpen1)}
         >
             <MdFlightLand className="text-[var(--color-grey-400)] mr-2 size-5" />
@@ -134,7 +143,7 @@ const FlightSearch = (props: Props) => {
       </div>
 
       {/* Search Button */}
-      <button className="bg-[var(--color-purple-blue)] hover:scale-105 text-white px-5 py-2 h-full rounded-md">Search</button>
+      <button onClick={handleSearch} className="bg-[var(--color-purple-blue)] hover:scale-105 text-white px-5 py-3 h-full rounded-md">Search</button>
     </div>
   )
 }

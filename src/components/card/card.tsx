@@ -14,7 +14,7 @@ const Card = ({title, image, price, description}: Props) => {
     <div className=" bg-white rounded-lg shadow-sm overflow-hidden shadow-gray-400 dark:bg-gray-800 dark:border-gray-700">
         <div className=' h-fit overflow-hidden'>
             <Image 
-            className="rounded-t-lg w-full image-hover-animation" 
+            className="rounded-t-lg w-full h-full image-hover-animation" 
             loading='lazy' quality={90} 
             src={image}
             height={397} 

@@ -22,13 +22,15 @@ export function DatePickerWithRange({
     "round-trip"
   );
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: new Date(),
+    to: addDays(new Date(), 20),
   })
+  
+  const [open, setOpen] = useState(false);
 
   return (
     <div className={cn("grid gap-2", className)}>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             id="date"
@@ -108,7 +110,9 @@ export function DatePickerWithRange({
                 <span>Depart - Retun</span>
               )}
             </div>
-            <button className="bg-[var(--color-purple-blue)] text-white px-5 py-2 h-full rounded-md">Done</button>
+            <button 
+            onClick={() => setOpen(false)}
+            className="bg-[var(--color-purple-blue)] text-white px-5 py-2 h-full rounded-md">Done</button>
           </div>
         </div>
           <Calendar
