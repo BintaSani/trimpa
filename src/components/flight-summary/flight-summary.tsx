@@ -30,7 +30,14 @@ const FlightCard = ({ seat, seatClass }: { seat: string; seatClass: string }) =>
   <div className="mt-2 ">
     <div className="border-[1.5px] overflow-auto border-gray-400 rounded whitespace-nowrap py-4 px-3 lg:px-8 flex gap-14 lg:justify-between items-center mb-1">
         <div className='flex items-center gap-3'>
-            <Image width={40} height={40} src='/images/airline.png' alt='flightlogo' className="w-10 h-10 rounded-full" />
+            <Image 
+              width={40} 
+              height={40} 
+              src='/images/airline.png' 
+              alt='flightlogo'  
+              layout='responsive'
+              className="w-10 h-10 rounded-full" 
+            />
             <div>
                 <p className="font-semibold">16h 45m</p>
                 <p className="text-sm text-gray-400">Hawaiian Airlines</p>

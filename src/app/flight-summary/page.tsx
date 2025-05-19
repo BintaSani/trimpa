@@ -17,7 +17,7 @@ const FlightSummary = (props: Props) => {
             <Nav/>
             <div className='mt-10 px-6 md:px-16 mb-14 max-w-[1440px] lg:flex lg:justify-between mx-auto'>
                 <div className='w-full mb-10 lg:mb-0 lg:w-[50%] xl:w-[60%]'>
-                    <div className='flex items-center w-fit gap-1 text-sm font-medium px-6 py-[21px] bg-[#EAFFFB] border text-[#007B65] border-[#007B65] rounded-md mb-[61px]'>
+                    <div className='flex items-start md:items-center w-fit gap-1 text-sm font-medium px-6 py-[21px] bg-[#EAFFFB] border text-[#007B65] border-[#007B65] rounded-md mb-[61px]'>
                         <p>Your flight has been booked successfully! Your confirmation number is #381029404387</p>
                         <IoCloseSharp className='text-gray-300 text-2xl cursor-pointer'/>
                     </div>

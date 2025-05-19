@@ -13,8 +13,8 @@ const FlightRoute = (props: Props) => {
         width={100} 
         height={100} 
         loading='lazy'
-        unoptimized
-        quality={90}
+        sizes='100vw'
+        layout='responsive'
         className='w-full h-full  '
       />
       <div className='absolute top-1/2 right-60 w-[227px] text-base font-bold text-[#1513A0] flex items-center justify-between'>

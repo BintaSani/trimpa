@@ -9,29 +9,33 @@ export const AirplaneBody: React.FC = () => {
       width={100} 
       height={100} 
       alt="plane" 
-      unoptimized
-      className="w-full hidden lg:block 2xl:hidden relative h-full"/>
+      sizes='100vw'
+      layout='responsive'
+      className="w-full hidden xl:block 3xl:hidden relative h-full"/>
       <Image 
       src="/images/planemd.png" 
       width={100} 
       height={100} 
       alt="plane" 
-      unoptimized
-      className="w-full relative mx-auto hidden md:block lg:hidden h-full"/>
+      sizes='100vw'
+      layout='responsive'
+      className="w-full relative mx-auto hidden md:block xl:hidden h-full"/>
       <Image 
       src="/images/planemb.png" 
       width={100} 
       height={100} 
       alt="plane" 
-      unoptimized
+      sizes='100vw'
+      layout='responsive'
       className="w-full relative mx-auto md:hidden h-full"/>
       <Image 
       src="/images/plane.png" 
       width={100} 
       height={100} 
       alt="plane" 
-      unoptimized
-      className="w-full relative hidden 2xl:block h-full"/>
+      sizes='100vw'
+      layout='responsive'
+      className="w-full relative hidden 3xl:block h-full"/>
     </div>
   );
 };

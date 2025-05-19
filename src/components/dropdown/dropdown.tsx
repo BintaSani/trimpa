@@ -3,11 +3,11 @@ import { useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
 
 const dropdownOptions = [
-  { label: "Max price", options: ["$100", "$200", "$300", "$400"] },
-  { label: "Shops", options: ["Shop A", "Shop B", "Shop C"] },
+  { label: "Max price", options: [100, 200, 300, 400] },
+  { label: "Stops", options: [true, false] },
   { label: "Times", options: ["Morning", "Afternoon", "Evening"] },
   { label: "Airlines", options: ["Airline A", "Airline B", "Airline C"] },
-  { label: "Seat class", options: ["Economy", "Business", "First Class"] },
+  { label: "Seat class", options: ["BUSINESS", "ECONOMY"] },
   { label: "More", options: ["Extra Legroom", "WiFi", "Meals"] },
 ];
 

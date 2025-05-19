@@ -1,46 +1,125 @@
 'use client'
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { MdFlightTakeoff, MdFlightLand } from "react-icons/md";
 import { DatePickerWithRange } from '../datePicker/datePicker';
 import { FaUser, FaPlus, FaMinus } from "react-icons/fa6";
 import { usePathname, useRouter } from 'next/navigation';
+import { useAirportContext } from '../../../context/airportContext';
+import { TokenContext } from '../../../context/tokenContext';
+import { useFlightSearchContext } from '../../../context/flightSearchContext';
 
 type Props = {}
 
 const FlightSearch = (props: Props) => {
-    const [from, setFrom] = useState("");
-    const [adults, setAdults] = useState(0);
-    const [minors, setMinors] = useState(0);
-    const [to, setTo] = useState("");
-    const [dates, setDates] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const [isMenu, setIsMenu] = useState(false);
     const [isOpen1, setIsOpen1] = useState(false);
+    const { airports, setAirports } = useAirportContext();
+    const { token, loading } = useContext(TokenContext);
+    const { from, to, adults, minors, date, setFrom, setTo, setAdults, setMinors, setDate, flightData, setFlightData, tripType } = useFlightSearchContext();
+    const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const path = usePathname();
-  
-    const options = [
-      { value: "DXB", label: "Dubai (DXB)" },
-      { value: "LHR", label: "London (LHR)" },
-    ];
-  
-    const handleSelect = (value: string) => {
-        if (isOpen) {
-            setFrom(value);
-            setIsOpen(false);
-        } else{
-            setTo(value)
-            setIsOpen1(false);
+    
+   console.log("Flight Data:", flightData);
+      const fetchFlights = async () => {
+        if (loading || !token) return;
+        const depatureDate = date.from;
+        const returnDate = date.to;
+        const formattedDate = depatureDate?.toISOString().split('T')[0];
+        const formattedReturnDate = returnDate?.toISOString().split('T')[0];
+        try {
+          setIsLoading(true);
+    
+          const response = await fetch(
+            `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${from}&destinationLocationCode=${to}&departureDate=${formattedDate}${tripType === 'round-trip' ? `&returnDate=${formattedReturnDate}` : ''}&adults=${adults}&children=${minors}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Replace with actual token
+              },
+            }
+          );
+    
+          if (!response.ok) throw new Error("Failed to fetch flight data");
+    
+          const data = await response.json();
+          const flightData = data.data;
+          if (flightData.length > 0) {
+            if (setFlightData) {
+                setFlightData(data);
+            }
+          }
+          
+        } catch (err: any) {
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
         }
-    };
+      };
+   
+
+  const fetchIataCodes = async (keyword: string) => {
+    if (loading || !token) return;
+    const res = await fetch(`https://test.api.amadeus.com/v1/reference-data/locations?keyword=${keyword}&subType=CITY,AIRPORT`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await res.json();
+    const cleaned = data.data.map((entry: any) => ({
+      name: entry.name,
+      iataCode: entry.iataCode,
+    }));
+
+    setAirports(cleaned);
+  };
+  
+
+  
+    const handleSelect = (iataCode: string) => {
+      if (isOpen) {
+        setFrom(iataCode);
+        setIsOpen(false); 
+      } else if (isOpen1) {
+        setTo(iataCode);
+        setIsOpen1(false); 
+      }
+    }
 
     const handleSearch = () => {
-        if (from && to ) {
-            router.push(`/flights`);
+      
+        if (path === '/' && from && to && date.from && adults || minors) {
+          fetchFlights();
+          router.push(`/flights`);
+        } else  if (path === '/flights' && from && to && date.from && adults || minors) {
+          fetchFlights();
         } else {
             alert("Please fill in all fields");
         }
     }
+
+    const handleInputChange = (e: { target: { value: string } }, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+      
+    const keyword = e.target.value;
+
+    // Clear the previous timer if any
+    if (debounceTimer) {
+        clearTimeout(debounceTimer);
+    }
+
+    // Set a new timer to fetch after 2 seconds (debounce)
+    const timer = setTimeout(() => {
+        if (keyword.length >= 3) {
+            fetchIataCodes(keyword);  // Fetch the data based on the input
+            setIsOpen(true);  // Open the dropdown to show results
+        }
+    }, 1000); // Delay of 2 seconds
+
+    // Save the timer ID to clear it later
+    setDebounceTimer(timer);
+};
+
     
 
   return (
@@ -53,21 +132,27 @@ const FlightSearch = (props: Props) => {
         >
             <MdFlightTakeoff className="text-[var(--color-grey-400)] mr-2 size-5" />
             <span className="text-[var(--color-grey-400)]">
-            {from ? options.find((opt) => opt.value === from)?.label : "From where?"}
+            {from ? from : 
+            <input
+                type="text"
+                onChange={(e) => handleInputChange(e, setIsOpen)}
+                className='placeholder:text-[var(--color-grey-400)] w-full border-none focus:outline-none'
+                placeholder="From where?"/>
+            }
             </span>
         </button>
 
-        {isOpen && (
+        {isOpen && airports.length > 0 && (
             <ul className="absolute w-[90%] right-0 bg-white shadow-lg p-4 rounded-md mt-2 z-10">
-            {options.map((option) => (
+            {airports.map((option, index) => (
                 <li
-                key={option.value}
+                key={index}
                 className="p-3 hover:bg-[var(--color-purple-blue)] hover:text-white rounded cursor-pointer"
-                onClick={() => handleSelect(option.value)}
+                onClick={() => handleSelect(option.iataCode)}
                 >
-                {option.label}
+                {option.name} ({option.iataCode})
                 </li>
-            ))}
+            ))} 
             </ul>
         )}
       </div>
@@ -80,19 +165,25 @@ const FlightSearch = (props: Props) => {
         >
             <MdFlightLand className="text-[var(--color-grey-400)] mr-2 size-5" />
             <span className="text-[var(--color-grey-400)]">
-            {to ? options.find((opt) => opt.value === to)?.label : "Where to?"}
+            {to ? to : 
+            <input
+            type="text"
+            onChange={(e) => handleInputChange(e, setIsOpen1)}
+            className='placeholder:text-[var(--color-grey-400)] w-full border-none focus:outline-none'
+            placeholder="Where to?"/>
+            }
             </span>
         </button>
 
-        {isOpen1 && (
+        {isOpen1 && airports.length > 0 && (
             <ul className="absolute w-[90%] right-0 p-4 bg-white shadow-lg rounded-md mt-2 z-10">
-            {options.map((option) => (
+            {airports.map((option, index) => (
                 <li
-                key={option.value}
+                key={index}
                 className="p-3 hover:bg-[var(--color-purple-blue)] hover:text-white rounded cursor-pointer"
-                onClick={() => handleSelect(option.value)}
+                onClick={() => handleSelect(option.iataCode)}
                 >
-                {option.label}
+                {option.name} ({option.iataCode}) 
                 </li>
             ))}
             </ul>
@@ -101,7 +192,7 @@ const FlightSearch = (props: Props) => {
 
       {/* Depart - Return */}
       <div className="relative flex-1">
-        <DatePickerWithRange/>
+            <DatePickerWithRange date={date} setDate={setDate} />
       </div>
 
       {/* Adults & Minors Dropdown */}

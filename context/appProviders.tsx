@@ -6,6 +6,10 @@ import { FlightProvider } from './FlightContext';
 import { ModalProvider } from './Modalcontext';
 import { SeatProvider } from './selectSeatContext';
 import { PaymentProvider } from './paymentContext';
+import { TokenProvider } from './tokenContext';
+import { AirportProvider } from './airportContext';
+import { FlightSearchProvider } from './flightSearchContext';
+import { PassengerFormProvider } from './passengerformContext';
 
 
 const AppProviders = ({ children }: { children: ReactNode }) => {
@@ -15,7 +19,15 @@ const AppProviders = ({ children }: { children: ReactNode }) => {
         <ModalProvider> 
           <SeatProvider> 
             <PaymentProvider>
-              {children}
+              <TokenProvider>
+                <AirportProvider>
+                  <FlightSearchProvider>
+                    <PassengerFormProvider>
+                      {children}
+                    </PassengerFormProvider>
+                  </FlightSearchProvider>
+                </AirportProvider>
+              </TokenProvider>
             </PaymentProvider>  
           </SeatProvider>
         </ModalProvider>

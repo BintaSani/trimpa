@@ -1,10 +1,10 @@
 "use client"
 
 import React, {useState} from "react"
-import { addDays, format } from "date-fns"
+import { format } from "date-fns"
 import { TbCalendarEventFilled as CalendarIcon } from "react-icons/tb"
 import { DateRange } from "react-day-picker"
-
+import { useFlightSearchContext } from '../../../context/flightSearchContext';
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -15,18 +15,24 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+type DatePickerProps = {
+  date: DateRange;
+  setDate: (range: DateRange) => (void);
+} & React.HTMLAttributes<HTMLDivElement>;
+
 export function DatePickerWithRange({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const [tripType, setTripType] = useState<"round-trip" | "one-way">(
-    "round-trip"
-  );
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 20),
-  })
+  date,
+  setDate,
+}: DatePickerProps) {
+  const { tripType, setTripType } = useFlightSearchContext();
+  // const [date, setDate] = useState<DateRange | undefined>({
+  //   from: new Date(),
+  //   to: addDays(new Date(), 20),
+  // })
   
   const [open, setOpen] = useState(false);
+  
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -64,7 +70,7 @@ export function DatePickerWithRange({
                 name="trip"
                 value="round-trip"
                 checked={tripType === "round-trip"}
-                onChange={() => setTripType("round-trip")}
+                onChange={() => setTripType?.("round-trip")}
                 className="accent-[var(--color-purple-blue)]"
               />
               
@@ -77,37 +83,27 @@ export function DatePickerWithRange({
                 name="trip"
                 value="one-way"
                 checked={tripType === "one-way"}
-                onChange={() => setTripType("one-way")}
+                onChange={() => setTripType?.("one-way")}
                 className=" accent-[var(--color-purple-blue)]"
               />
-              {/* <div
-                className={`w-4 h-4 rounded-full border-2 ${
-                  tripType === "one-way"
-                    ? "border-indigo-500 bg-indigo-500"
-                    : "border-gray-400"
-                } flex items-center justify-center`}
-              >
-                {tripType === "one-way" && (
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                )}
-              </div> */}
+              
               <span className="text-gray-700">One way</span>
             </label>
           </div>
           <div className="flex items-center space-x-3">
             <div className="flex items-center gap-2 border-[1.5px] border-[var(--color-purple-blue)] rounded p-1.5 ">
-              <CalendarIcon className="size-5"/>
+              <CalendarIcon className="size-5"
+              />
               {date?.from ? (
-                date.to ? (
+                tripType === "round-trip" && date.to ? (
                   <>
-                    {format(date.from, "LLL dd")} -{" "}
-                    {format(date.to, "LLL dd")}
+                    {format(date.from, "LLL dd")} - {format(date.to, "LLL dd")}
                   </>
                 ) : (
                   format(date.from, "LLL dd")
                 )
               ) : (
-                <span>Depart - Retun</span>
+                <span>Depart - Return</span>
               )}
             </div>
             <button 
@@ -115,14 +111,30 @@ export function DatePickerWithRange({
             className="bg-[var(--color-purple-blue)] text-white px-5 py-2 h-full rounded-md">Done</button>
           </div>
         </div>
+        {tripType === "round-trip" ? (
           <Calendar
             initialFocus
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={(range) => {
+              if (range) {
+                setDate(range);
+              }
+            }}
             numberOfMonths={2}
+          />) : (
+          <Calendar
+            initialFocus
+            mode="single"
+            defaultMonth={date?.from}
+            selected={date?.from}
+            onSelect={(selectedDate) => {
+              setDate({ from: selectedDate, to: undefined })
+            }}
+            numberOfMonths={1}
           />
+          )}
         </PopoverContent>
       </Popover>
     </div>

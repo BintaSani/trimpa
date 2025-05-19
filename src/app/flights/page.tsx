@@ -4,8 +4,8 @@ import FlightSearch from '@/components/form/form';
 import Nav from '@/components/nav-bar/nav';
 import Dropdown from '@/components/dropdown/dropdown';
 import FlightList from '@/components/availableFlights/availableFlights';
-import { flights } from '@/components/availableFlights/flightData';
-import type { Flight } from '@/components/availableFlights/flightData';
+import { useFlightSearchContext } from '../../../context/flightSearchContext';
+import type {TransformedFlightOffer } from '@/components/availableFlights/flightData';
 import { useFlightContext } from '../../../context/FlightContext';
 import PriceGrid from '@/components/price-grid/price-grid';
 import PriceHistory from '@/components/price-history/priceHistory';
@@ -20,17 +20,18 @@ type Props = {}
 const Flight = (props: Props) => {
   const router = useRouter();
    // State to store the selected flight
-   const {selectedFlights, setSelectedFlights} = useFlightContext();
+   const {selectedFlights, setSelectedFlights, totalCosts} = useFlightContext();
+   const { from, to } = useFlightSearchContext();
 
    // Function to handle when a row is clicked
-   const handleFlightSelect = (flight: Flight) => {
+   const handleFlightSelect = (flight: TransformedFlightOffer) => {
     setSelectedFlights((prevFlights) => [...prevFlights, flight]);
   };
 
-  const totalCost = selectedFlights.reduce((sum, flight) => {
-    const numericPrice = parseFloat(flight.price.toString().replace(/[^0-9.]/g, ""));
-    return sum + numericPrice;
-  }, 0);
+  // const totalCost = selectedFlights.reduce((sum, flight) => {
+  //   const numericPrice = parseFloat(flight.totalCost.toString().replace(/[^0-9.]/g, ""));
+  //   return sum + numericPrice;
+  // }, 0);
   
   const handleSaveAndClose = () => {
     router.push('/passenger-info');
@@ -46,16 +47,22 @@ const Flight = (props: Props) => {
           <div className='w-full lg:w-[60%] xl:w-[66.62%]'>
             <h4 className='mb-5 text-sm 2xl:text-xl font-medium text-gray-500'>Choose a <span className='text-[var(--color-purple-blue)]'>departing</span> flight</h4>
             <FlightList 
-              flights={flights}
+              
               onFlightSelect={handleFlightSelect}
             />
-            <div className='flex items-center justify-end mt-6'>
-              <button className='text-[var(--color-purple-blue)] border hover:bg-[var(--color-purple-blue)] hover:text-white rounded border-[var(--color-purple-blue)] text-sm px-5 py-[11.5px] 2xl:text-lg'>Show all flights</button>
+            <div 
+            className='flex items-center justify-end mt-6'>
+              <button 
+              className='text-[var(--color-purple-blue)] border hover:bg-[var(--color-purple-blue)] hover:text-white rounded border-[var(--color-purple-blue)] text-sm px-5 py-[11.5px] 2xl:text-lg'>
+                Show all flights
+              </button>
             </div>
-            <div className='w-full bg-[url("/images/map.png")] bg-contain md:bg-fit 2xl:bg-cover h-[100px] bg-no-repeat mt-12 flex items-center justify-center md:h-[161px] xl:h-[171px]'>
-              <div className='w-[110px] md:w-[180px] xl:w-[227px] text-[9px] flex items-center text-[#1513A0] mr-8 md:mt-7 lg:-mt-3 xl:mt-4 2xl:mt-12 font-bold md:text-xs justify-between'>
-                <p>NRT</p>
-                <p>SFO</p>
+            <div 
+            className='w-full bg-[url("/images/map.png")] bg-contain md:bg-fit 2xl:bg-cover h-[100px] bg-no-repeat mt-12 flex items-center justify-center md:h-[161px] xl:h-[171px]'>
+              <div 
+              className='w-[110px] md:w-[180px] xl:w-[227px] text-[9px] flex items-center text-[#1513A0] mr-8 md:mt-7 lg:-mt-3 xl:mt-4 2xl:mt-12 font-bold md:text-xs justify-between'>
+                <p>{from}</p>
+                <p>{to}</p>
               </div>
             </div>
           </div>
@@ -63,7 +70,7 @@ const Flight = (props: Props) => {
             {/* Show the selected flight details */}
             {selectedFlights.length > 0 ? (
               <>
-                <Selectedflight selectedFlights={selectedFlights} totalCost={totalCost}/>
+                <Selectedflight selectedFlights={selectedFlights} totalCost={totalCosts}/>
                 <div className='pr-4 mt-4 w-full flex items-center justify-end'>
                   <button 
                   onClick={handleSaveAndClose}

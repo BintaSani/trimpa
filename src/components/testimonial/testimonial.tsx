@@ -33,6 +33,9 @@ const Testimonial = ({
           alt={name}
           width={100}
           height={100}
+          sizes='100vw'
+          layout='responsive'
+          loading='lazy'
           className="rounded-full mt-3"
         />
         <div>
@@ -49,6 +52,9 @@ const Testimonial = ({
                 alt="star"
                 width={20}
                 height={20}
+                loading='lazy'
+                sizes='100vw'
+                layout='responsive'
                 />
             ))}
             </div>

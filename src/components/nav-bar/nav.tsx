@@ -20,10 +20,18 @@ const Nav = (props: Props) => {
         // className
   
     >
-      <img
-        className="shrink-0 w-[131px] h-[54px] relative overflow-visible"
-        src="/icons/logo.svg"
-      />
+      <Link href='/'>
+        <Image
+          width={131}
+          height={54}
+          alt="tripma-logo"
+          sizes='100vw'
+          layout='responsive'
+          priority={true}
+          className="shrink-0 w-[131px] h-[54px] relative overflow-visible"
+          src="/icons/logo.svg"
+        />
+      </Link>
       <div className='lg:hidden relative'>
         <button onClick={() => setIsOpen(!isOpen)}>
           {!isOpen ? <IoMenu className='text-[var(--color-purple-blue)] size-10'/> :
@@ -51,7 +59,7 @@ const Nav = (props: Props) => {
 
       {/* Desktop Menu */}
       <div className="p-4 hidden lg:flex flex-row gap-4 text-[var(--color-grey-400)] font-[var(--font-sans)] text-base items-center justify-start shrink-0 relative">
-        <Link href='/' className="hover:scale-105 p-2.5 flex flex-row gap-2.5 items-center justify-start shrink-0 relative overflow-hidden">
+        <Link href='/flights' className="hover:scale-105 p-2.5 flex flex-row gap-2.5 items-center justify-start shrink-0 relative overflow-hidden">
           <div className={`${ pathname === '/' ? 'text-[var(--color-purple-blue)]' : ''}
            text-center relative flex items-center justify-center`}>
             Flights{" "}
@@ -78,7 +86,16 @@ const Nav = (props: Props) => {
         </Link>
         }
         {pathname === '/flight-summary' && 
-          <Image width={40} height={40} src='/images/airline.png' alt='flightlogo' className="w-10 h-10" />
+          <Image 
+            width={40} 
+            height={40} 
+            src='/images/airline.png' 
+            alt='flightlogo'
+            sizes='100vw'
+            layout='responsive'
+            loading='lazy' 
+            className="w-10 h-10" 
+          />
         }
         {pathname !== '/flight-summary' && <button  onClick={() => setIsModalOpen(true)} className="hover:scale-105 p-2.5 flex flex-row gap-2.5 items-center justify-start shrink-0 relative overflow-hidden">
           <div className={`${ pathname === '/signIn' ? 'text-[var(--color-purple-blue)]' : ''}

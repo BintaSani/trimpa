@@ -1,11 +1,12 @@
 'use client'
 import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
-import type { Flight } from '@/components/availableFlights/flightData';
+import type { TransformedFlightOffer } from '@/components/availableFlights/flightData';
+
 
 interface FlightContextType {
-  selectedFlights: Flight[];
-  setSelectedFlights: React.Dispatch<React.SetStateAction<Flight[]>>;
-  totalCost: number;
+  selectedFlights: TransformedFlightOffer[];
+  setSelectedFlights: React.Dispatch<React.SetStateAction<TransformedFlightOffer[]>>;
+  totalCosts: number;
 }
 
 const FlightContext = createContext<FlightContextType | undefined>(undefined);
@@ -17,17 +18,17 @@ export const useFlightContext = () => {
 };
 
 export const FlightProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedFlights, setSelectedFlights] = useState<Flight[]>([]);
+  const [selectedFlights, setSelectedFlights] = useState<TransformedFlightOffer[]>([]);
 
   // Calculate the total cost (memoized for performance)
-  const totalCost = useMemo(() => {
+  const totalCosts = useMemo(() => {
     return selectedFlights.reduce((sum, flight) => {
-      const numericPrice = parseFloat(flight.price.toString().replace(/[^0-9.]/g, ""));
+      const numericPrice = parseFloat(flight.totalCost.toString().replace(/[^0-9.]/g, ""));
       return sum + numericPrice;
     }, 0);
   }, [selectedFlights]); // Recalculate when selectedFlights changes
   return (
-    <FlightContext.Provider value={{ selectedFlights, setSelectedFlights, totalCost }}>
+    <FlightContext.Provider value={{ selectedFlights, setSelectedFlights, totalCosts }}>
       {children}
     </FlightContext.Provider>
   );

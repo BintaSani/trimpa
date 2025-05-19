@@ -17,15 +17,15 @@ export const Cabin: React.FC = () => {
   return (
     <div className="z-50">
       
-      <div className="relative mx-auto space-y-4 md:pl-2 w-fit">
+      <div className="relative mx-auto space-y-4 md:pl-2 lg:pl-0 xl:pl-2 w-fit">
         <section 
-        className={` px-2 py-3 ${xs ? 'mt-[27.3rem]' : "mt-[29rem]"} md:mt-[36.5rem] mr-2 ml-2 md:ml-0 lg:mr-0 lg:mt-[22rem] xl:mt-[27rem] 2xl:mt-[29.8rem] bg-white rounded-lg w-[150px] md:w-[200px] lg:w-[150px] xl:w-[180px] 2xl:w-[200px]`}>
+        className={` px-2 py-3 ${xs ? 'mt-[26.8rem]' : "mt-[29rem]"} md:mt-[36.5rem] mr-2 ml-2 md:ml-0 lg:mr-0 mdLg:mt-[43rem] lg:mt-[52rem] xl:mt-[27rem] 2xl:mt-[29.8rem] bg-white rounded-lg w-[150px] md:w-[200px] lg:w-[255px] xl:w-[180px] 2xl:w-[200px]`}>
           {[1, 2, 3, 4, 5].map((rowNum) => (
             <SeatRow key={rowNum} rowNumber={rowNum}  />
           ))}
         </section>
 
-        <section className=" px-2 py-2] bg-white rounded-lg mr-2 ml-2 md:ml-0 lg:mr-0 w-[150px] md:w-[200px] lg:w-[150px] xl:w-[180px] 2xl:w-[200px]">
+        <section className=" px-2 py-2] bg-white rounded-lg mr-2 ml-2 md:ml-0 lg:mr-0 w-[150px] md:w-[200px] lg:w-[255px] xl:w-[180px] 2xl:w-[200px]">
           <ExitRowIndicator />
           {[6, 7, 8, 9, 10, 11, 12, 13].map((rowNum) => (
             <SeatRow key={rowNum} rowNumber={rowNum}  />

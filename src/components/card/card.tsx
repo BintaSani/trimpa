@@ -15,12 +15,13 @@ const Card = ({title, image, price, description}: Props) => {
         <div className=' h-fit overflow-hidden'>
             <Image 
             className="rounded-t-lg w-full h-full image-hover-animation" 
-            loading='lazy' quality={90} 
+            loading='lazy'
             src={image}
             height={397} 
             width={100} 
-            unoptimized={true}
-            alt=""/>
+            sizes='100vw'
+            layout='responsive'
+            alt="card image"/>
         </div>
         <div className="px-5 py-4 rounded-b-lg">
             <div className='flex items-center justify-between mb-1'>

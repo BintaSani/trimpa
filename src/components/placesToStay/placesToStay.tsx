@@ -14,13 +14,13 @@ import { IoArrowForward } from "react-icons/io5";
       name: "HOTEL THE FLAG 大阪市",
       description:
         "Make a stop in Osaka and stay at HOTEL THE FLAG, just a few minutes walk to experience the food culture surrounding Dotonbori. Just one minute away is the Shinsaibashi shopping street.",
-      image: "images/flag.png",
+      image: "/images/flag.png",
     },
     {
       name: "9 Hours Shinjuku",
       description:
         "Experience a truly unique stay in an authentic Japanese capsule hotel. 9 Hours Shinjuku is minutes from one of Japan’s busiest train stations. Just take the NEX train from Narita airport!",
-      image: "images/shinjuku.png",
+      image: "/images/shinjuku.png",
     },
   ];
 
@@ -36,19 +36,19 @@ const Places = () => {
               </p>
             </div>
             <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10'>
-                {hotels.map((hotel, index) => 
-                    <div className='' key={index}>
-                    <Card title={
-                        
-                    <><span className='text-[var(--color-purple-blue)]'>{hotel.name}</span></>
-                    } 
-                    image={hotel.image} 
-                    price='' 
-                    description={hotel.description}
-                    />
-                    </div>
-                    )
-                }
+              {hotels.map((hotel, index) => 
+                <div className='' key={index}>
+                <Card title={
+                    
+                <><span className='text-[var(--color-purple-blue)]'>{hotel.name}</span></>
+                } 
+                image={hotel.image} 
+                price='' 
+                description={hotel.description}
+                />
+                </div>
+                )
+              }
                 
             </div>
         </div>

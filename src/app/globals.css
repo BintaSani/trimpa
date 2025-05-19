@@ -82,6 +82,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --breakpoint-mdLg: 56.25rem;
+  --breakpoint-3xl: 120rem;
 
 }
 .image-hover-animation {
@@ -95,6 +97,8 @@
 
 body {
   background: #ffffff;
+  border: none;
+  box-sizing: border-box;
   
 }
 /* Custom Scrollbar */

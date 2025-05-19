@@ -19,7 +19,7 @@ const SeatSelection = (props: Props) => {
     return (
     <div className=" relative bg-blur backdrop-blur-md md:h-screen flex flex-col justify-between">
         {/* Flight Header */}
-        <div className="grid grid-cols-3 text-white">
+        <div className="grid grid-cols-1 md:grid-cols-3 text-white">
           <div className="bg-[#1e1f3a] px-6 py-5 flex items-center justify-between ">
             <div>
                 <h4 className="text-2xl">SFO</h4>
@@ -51,9 +51,9 @@ const SeatSelection = (props: Props) => {
             height={100} 
             src="/images/Economy Seats.png" 
             alt="economy" 
-            unoptimized
             loading='lazy'
-            quality={90}
+            sizes='100vw'
+            layout='responsive'
             className="w-full mb-4 mt-8"/>
             <div className="flex items-center mb-2">
               <h4 className="text-lg font-medium text-gray-600">Economy</h4>
@@ -80,9 +80,9 @@ const SeatSelection = (props: Props) => {
             height={100} 
             src="/images/Business Seats.png" 
             alt="business" 
-            unoptimized
             loading='lazy'
-            quality={90}
+            sizes='100vw'
+            layout='responsive'
             className="w-full mb-4 mt-8"/>
             <div className="flex items-center mb-2">
               <h3 className="text-lg font-medium text-gray-600">Business class</h3>

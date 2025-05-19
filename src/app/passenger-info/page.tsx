@@ -40,8 +40,8 @@ const PassengerInfo = (props: Props) => {
                 alt="passenger-bag" 
                 width={100} 
                 loading='lazy' 
-                quality={90} 
-                unoptimized={true} 
+                sizes='100vw'
+                layout='responsive'
                 height={100} 
                 className='w-full h-full  '/>
               </div>

@@ -4,14 +4,20 @@ import Link from "next/link";
 import { FaTwitter, FaInstagram, FaFacebookSquare } from "react-icons/fa";
 
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer className="bg-white text-gray-500 py-10 ">
       <div className="max-w-[1440px] px-6 lg:px-[7.5rem] mx-auto grid grid-cols-1 pb-5 md:grid-cols-5 gap-8">
         {/* Logo Section */}
         <div className="col-span-1">
-          
-          <Image src="/icons/logo.svg" alt="Tripma Logo" width={107} height={30} />
+          <Link href='/'>
+            <Image 
+              src="/icons/logo.svg" 
+              alt="Tripma Logo" 
+              width={107} 
+              height={30} 
+            />
+          </Link>
         </div>
 
         {/* About Section */}

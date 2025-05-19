@@ -56,13 +56,32 @@ const PaymentForm = () => {
 
       <h2 className="text-lg font-semibold mt-10 mb-4">Create an account</h2>
       <label className="flex items-center mb-6">
-        <input type="checkbox" name="saveCard" checked={cardInfo.saveCard} onChange={handleInput} className="mr-2 text-base " />
+        <input 
+          type="checkbox" 
+          name="saveCard" 
+          checked={cardInfo.saveCard} 
+          onChange={handleInput} 
+          className="mr-2 text-base " 
+        />
         Save card and create account for later
       </label>
         
       <div className="flex flex-col gap-6 lg:w-[70%]">
-        <input name="email" onChange={handleInput} value={cardInfo.email} placeholder="Email address or phone number" className="input" />
-        <input name="password" onChange={handleInput} value={cardInfo.password} placeholder="Password" type="password" className="input" />
+        <input 
+          name="email" 
+          onChange={handleInput} 
+          value={cardInfo.email} 
+          placeholder="Email address or phone number" 
+          className="input" 
+          />
+        <input 
+          name="password" 
+          onChange={handleInput} 
+          value={cardInfo.password} 
+          placeholder="Password" 
+          type="password" 
+          className="input" 
+        />
 
         <div className="flex items-center my-4">
             <hr className="flex-grow border-gray-200" />

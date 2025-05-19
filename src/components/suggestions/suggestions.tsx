@@ -21,7 +21,7 @@ import { IoArrowForward } from "react-icons/io5";
     {
       name: "Seoul",
       country: "South Korea",
-      description: "This modern city is a traveler’s dream",
+      description: "This modern city is a traveler's dream",
       price: "$589",
       image: "/images/soeul.png",
     },
