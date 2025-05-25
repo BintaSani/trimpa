@@ -1,6 +1,11 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
+
+type Data = {
+  label: string;
+  options: (string | number | boolean)[];
+};
 
 const dropdownOptions = [
   { label: "Max price", options: [100, 200, 300, 400] },
@@ -11,7 +16,7 @@ const dropdownOptions = [
   { label: "More", options: ["Extra Legroom", "WiFi", "Meals"] },
 ];
 
-const Dropdown = ({ label, options }: { label: string; options: string[] }) => {
+const Dropdown = ({ label, options }: Data) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -44,7 +49,11 @@ export default function FilterBar() {
   return (
     <div className="flex flex-wrap gap-2 mt-5 rounded-md">
       {dropdownOptions.map((dropdown, index) => (
-        <Dropdown key={index} label={dropdown.label} options={dropdown.options} />
+        <Dropdown
+          key={index}
+          label={dropdown.label}
+          options={dropdown.options}
+        />
       ))}
     </div>
   );

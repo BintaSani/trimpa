@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import AppProviders from "../../context/appProviders";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 
 const nunitoSans = Nunito_Sans({
@@ -25,12 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${nunitoSans.variable} antialiased`}
-      >
-        <AppProviders>
-        {children}
-        </AppProviders>
+      <body className={`${nunitoSans.variable} antialiased`}>
+        <ToastContainer position="top-center" autoClose={3000} />
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );
