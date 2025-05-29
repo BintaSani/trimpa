@@ -38,8 +38,8 @@ export function TokenProvider({ children }: TokenProviderProps) {
       }
 
       try {
-        const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-        const clientSecret = process.env.NEXT_PUBLIC_CLIENT_SECRET;
+        const clientId = process.env.CLIENT_ID;
+        const clientSecret = process.env.CLIENT_SECRET;
 
         if (!clientId || !clientSecret) {
           throw new Error(
