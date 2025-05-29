@@ -4,20 +4,18 @@ import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import { transformFlightOffers, TransformedFlightOffer } from "./flightData";
 
 interface FlightListProps {
-  // flights: Flight[]; 
+  // flights: Flight[];
   onFlightSelect: (flight: TransformedFlightOffer) => void;
 }
-
-
 
 const FlightTable = ({ onFlightSelect }: FlightListProps) => {
   const { flightData } = useFlightSearchContext();
   if (!flightData) {
-    return <div className="animate-pulse">Loading flights...</div>; 
-
+    return <div className="animate-pulse">Loading flights...</div>;
   }
 
-  const transformedData: TransformedFlightOffer[] = transformFlightOffers(flightData);
+  const transformedData: TransformedFlightOffer[] =
+    transformFlightOffers(flightData);
   // onClick={() => onFlightSelect(flight)}
 
   return (
@@ -34,41 +32,54 @@ const FlightTable = ({ onFlightSelect }: FlightListProps) => {
         </thead>
         <tbody>
           {transformedData.map((flight, index) => (
-            <tr key={index}  
-            className="border-b py-3 text-gray-400 cursor-pointer hover:bg-[#7C8DB010]" 
-            onClick={() => onFlightSelect(flight)}>
+            <tr
+              key={index}
+              className="border-b py-3 text-gray-400 cursor-pointer hover:bg-[#7C8DB010]"
+              onClick={() => onFlightSelect(flight)}
+            >
               <td className="p-3 flex items-center gap-3">
-                <Image 
-                  width={32} 
-                  height={32} 
-                  src={flight.airlineLogo} 
-                  alt={flight.airline} 
+                <Image
+                  width={32}
+                  height={32}
+                  src={flight.airlineLogo}
+                  alt={flight.airline}
                   loading="lazy"
                   className="w-8 h-8"
                 />
                 <div className="flex flex-col">
-                    <span className="text-gray-900">{flight.duration}</span>
-                    <span>{flight.airline}</span>
+                  <span className="text-gray-900">{flight.duration}</span>
+                  <span>{flight.airline}</span>
                 </div>
               </td>
               <td className="p-3  text-gray-900">
                 {flight.departureTime} - {flight.arrivalTime}
               </td>
               <td className="p-3">
-                <p className="text-gray-900"> {flight.numberOfStops === 0
-                  ? 'Nonstop'
-                  : `${flight.numberOfStops} stop(s)`}
+                <p className="text-gray-900">
+                  {" "}
+                  {flight.numberOfStops === 0
+                    ? "Nonstop"
+                    : `${flight.numberOfStops} stop(s)`}
                 </p>
                 {/* {flight.layover && <p className="text-sm text-gray-500">{flight.layover}</p>} */}
                 {flight.stops.map((stop, idx) => (
                   <div className="text-sm text-gray-500" key={idx}>
-                    {stop.duration} {stop.location} 
+                    {stop.duration} {stop.location}
                   </div>
                 ))}
               </td>
               <td className="p-3">
-                <p className="text-gray-900">{flight.currency} {flight.totalCost}</p>
-                {flight.isOneWay === false ? <p className=" text-sm">Round trip</p> : <p className=" text-sm">One way</p>}
+                <p className="text-gray-900">
+                  {flight.price?.currency}{" "}
+                  {flight.isOneWay === false
+                    ? Number(flight.price?.grandTotal) / 2
+                    : flight.price.grandTotal}
+                </p>
+                {flight.isOneWay === false ? (
+                  <p className=" text-sm">Round trip</p>
+                ) : (
+                  <p className=" text-sm">One way</p>
+                )}
               </td>
             </tr>
           ))}

@@ -1,5 +1,5 @@
-'use client'
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+"use client";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type PassengerFormData = {
   firstName: string;
@@ -19,41 +19,55 @@ type PassengerFormData = {
 };
 
 const defaultData: PassengerFormData = {
-  firstName: '',
-  middleName: '',
-  lastName: '',
-  suffix: '',
-  dob: '',
-  email: '',
-  phone: '',
-  redressNumber: '',
-  knownTravelerNumber: '',
-  emergencyFirstName: '',
-  emergencyLastName: '',
-  emergencyEmail: '',
-  emergencyPhone: '',
+  firstName: "",
+  middleName: "",
+  lastName: "",
+  suffix: "",
+  dob: "",
+  email: "",
+  phone: "",
+  redressNumber: "",
+  knownTravelerNumber: "",
+  emergencyFirstName: "",
+  emergencyLastName: "",
+  emergencyEmail: "",
+  emergencyPhone: "",
   bags: 1,
 };
 
 const PassengerFormContext = createContext<{
   formData: PassengerFormData;
   updateField: (field: keyof PassengerFormData, value: string | number) => void;
+  isFormValid: boolean;
+  setIsFormValid: (valid: boolean) => void;
 }>({
   formData: defaultData,
   updateField: () => {},
+  isFormValid: false,
+  setIsFormValid: () => {},
 });
 
 export const usePassengerForm = () => useContext(PassengerFormContext);
 
-export const PassengerFormProvider = ({ children }: { children: ReactNode }) => {
+export const PassengerFormProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [formData, setFormData] = useState(defaultData);
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  const updateField = (field: keyof PassengerFormData, value: string | number) => {
+  const updateField = (
+    field: keyof PassengerFormData,
+    value: string | number
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
-    <PassengerFormContext.Provider value={{ formData, updateField }}>
+    <PassengerFormContext.Provider
+      value={{ formData, updateField, isFormValid, setIsFormValid }}
+    >
       {children}
     </PassengerFormContext.Provider>
   );

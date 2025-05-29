@@ -46,7 +46,7 @@ const Nav = (props: Props) => {
           <Link
             href="/flights"
             className={`p-2.5 hover:bg-[var(--color-purple-blue)] hover:text-white ${
-              pathname === "/" ? "text-[var(--color-purple-blue)]" : ""
+              pathname === "/flights" ? "text-[var(--color-purple-blue)]" : ""
             }`}
             onClick={() => setIsOpen(false)}
           >
@@ -101,7 +101,7 @@ const Nav = (props: Props) => {
         >
           <div
             className={`${
-              pathname === "/" ? "text-[var(--color-purple-blue)]" : ""
+              pathname === "/flights" ? "text-[var(--color-purple-blue)]" : ""
             }
            text-center relative flex items-center justify-center`}
           >

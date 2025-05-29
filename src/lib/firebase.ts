@@ -1,6 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getAuth,
+  User,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAObuvWjuBJVdMJah7LzBMhjmxw2F87HwA",
@@ -14,48 +22,71 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
 export const db = getFirestore(app);
-// const analytics = getAnalytics(app);
 
-// /utils/generateSeatMap.ts
-// export const generateSeatMap = (
-//   economySeats: number,
-//   businessSeats: number
-// ) => {
-//   const seats: Record<string, boolean> = {};
-//   let businessAssigned = 0;
-//   let economyAssigned = 0;
+export const auth = getAuth();
 
-//   for (let row = 1; row <= 33; row++) {
-//     const seatCount = row <= 5 ? 4 : 6;
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
 
-//     for (let i = 0; i < seatCount; i++) {
-//       const label = String.fromCharCode(65 + i);
-//       const seatName = `${row}${label}`;
+export const SignInWithGoogle = () => {
+  signInWithPopup(auth, googleProvider)
+    .then((result) => {
+      const user = result.user;
+      // handle successful sign-in
+    })
+    .catch((error) => {
+      console.error("Google sign-in error", error);
+    });
+};
 
-//       if (row <= 5) {
-//         // Business class rows
-//         if (businessAssigned < businessSeats) {
-//           seats[seatName] = false; // available
-//           businessAssigned++;
-//         } else {
-//           seats[seatName] = true; // unavailable
-//         }
-//       } else {
-//         // Economy class rows
-//         if (economyAssigned < economySeats) {
-//           seats[seatName] = false;
-//           economyAssigned++;
-//         } else {
-//           seats[seatName] = true;
-//         }
-//       }
-//     }
-//   }
+const facebookProvider = new FacebookAuthProvider();
+facebookProvider.setCustomParameters({ display: "popup" });
+export const SignInWithFacebook = () => {
+  signInWithPopup(auth, facebookProvider)
+    .then((result) => {
+      const user = result.user;
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      const accessToken = credential?.accessToken;
 
-//   return seats;
-// };
+      // You now have the signed-in user and their accessToken
+      console.log("Facebook user:", user);
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error("Facebook login error:", error.message);
+    });
+};
+
+export const CreateUserProfileDocument = async (
+  userAuth: User,
+  additionalData?: Record<string, any> // You can define a stricter type if needed
+) => {
+  if (!userAuth?.uid) return;
+
+  const db = getFirestore();
+  const userRef = doc(db, "user", userAuth.uid);
+  const snapshot = await getDoc(userRef);
+
+  if (!snapshot.exists()) {
+    const { email, displayName, photoURL } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await setDoc(userRef, {
+        displayName,
+        photoURL,
+        email,
+        createdAt,
+        ...additionalData,
+      });
+    } catch (error: any) {
+      console.error("Error creating user profile", error.message);
+    }
+  }
+
+  return userRef;
+};
 
 export const generateSeatMap = (
   economySeats: number,

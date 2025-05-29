@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${nunitoSans.variable} antialiased`}>
-        <ToastContainer position="top-center" autoClose={3000} />
+        <ToastContainer position="top-right" autoClose={3000} />
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

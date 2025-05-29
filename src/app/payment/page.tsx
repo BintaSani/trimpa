@@ -11,7 +11,7 @@ import { Hand } from "lucide-react";
 type Props = {};
 
 const Payment = (props: Props) => {
-  const { selectedFlights, totalCosts } = useFlightContext();
+  const { selectedFlights } = useFlightContext();
   const router = useRouter();
   const handleConfirmAndPay = () => {
     // Handle payment confirmation logic here
@@ -32,10 +32,7 @@ const Payment = (props: Props) => {
           <PaymentForm />
         </div>
         <div className="w-full lg:w-[40%] xl:w-[33.33%] ">
-          <Selectedflight
-            selectedFlights={selectedFlights}
-            totalCost={totalCosts}
-          />
+          <Selectedflight selectedFlight={selectedFlights} />
           <div className="pr-4 mt-4 w-full flex items-center justify-end">
             <button
               onClick={handleConfirmAndPay}

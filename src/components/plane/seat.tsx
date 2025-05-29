@@ -3,22 +3,21 @@ import React, { useState, useEffect } from "react";
 import { useSeat } from "../../../context/selectSeatContext";
 import { FaCheck } from "react-icons/fa";
 import { useModal } from "../../../context/Modalcontext";
+import { useFlightSearchContext } from "../../../context/flightSearchContext";
+import { useFlightContext } from "../../../context/FlightContext";
 
 interface SeatRowProps {
   rowNumber: number;
-  availableBusinessSeats?: number | null;
-  availableEconomySeats?: number | null;
   seatMap?: Record<string, boolean>;
 }
 
-export const SeatRow = ({
-  rowNumber,
-  availableBusinessSeats,
-  availableEconomySeats,
-  seatMap = {},
-}: SeatRowProps) => {
-  const { selectedSeats, toggleSeat } = useSeat();
+export const SeatRow = ({ rowNumber, seatMap = {} }: SeatRowProps) => {
+  const { outboundSeats, returnSeats, toggleSeat } = useSeat();
+  const { currentLeg } = useFlightContext();
+  const { adults, minors } = useFlightSearchContext();
+
   const seatCount = rowNumber <= 5 ? 4 : 6;
+
   const seatLabels = Array.from({ length: seatCount }, (_, i) =>
     String.fromCharCode(65 + i)
   );
@@ -34,6 +33,9 @@ export const SeatRow = ({
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
+  const selectedSeats = currentLeg === "outgoing" ? outboundSeats : returnSeats;
+  const totalPassengers = adults + minors;
+
   const half = Math.floor(seatCount / 2);
   const leftSeats = seatLabels.slice(0, half);
   const rightSeats = seatLabels.slice(half);
@@ -45,12 +47,13 @@ export const SeatRow = ({
     const isSelected = selectedSeats.includes(seatName);
     const isTaken = seatMap[seatName];
 
-    const handleSeatClick = () => {
-      if (isTaken) return;
-      if (isBusinessClass) {
-        showUpgradeModal(() => toggleSeat(seatName, true));
+    const handleSeatClick = (seatName: string, isBusiness: boolean) => {
+      const toggle = () =>
+        toggleSeat(seatName, isBusiness, currentLeg, totalPassengers);
+      if (isBusiness) {
+        showUpgradeModal(toggle);
       } else {
-        toggleSeat(seatName, false);
+        toggle();
       }
     };
 
@@ -76,7 +79,10 @@ export const SeatRow = ({
                     : "from-[#605DEC] to-[#2A26D9]"
                 } hover:bg-red-500`
           }`}
-        onClick={handleSeatClick}
+        onClick={() => {
+          if (isTaken) return;
+          handleSeatClick(seatName, isBusinessClass);
+        }}
       >
         {isSelected && !isTaken && <FaCheck size={12} />}
       </button>

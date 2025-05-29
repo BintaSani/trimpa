@@ -7,8 +7,6 @@ import { SeatRow } from "./seat";
 import { useFlightContext } from "../../../context/FlightContext";
 
 type SeatData = {
-  economySeats: number;
-  businessSeats: number;
   seatMap?: Record<string, boolean>;
 };
 
@@ -16,8 +14,8 @@ export const Cabin = () => {
   const [xs, setXs] = useState(false);
   const [seatData, setSeatData] = useState<SeatData | null>(null);
   const { selectedFlights } = useFlightContext();
-  const flightId = selectedFlights[0]?.id || "";
-  console.log("Flight ID:", flightId);
+  const flightId = selectedFlights?.id || "";
+  // console.log("Flight ID:", flightId);
 
   useEffect(() => {
     const fetchFlight = async () => {
@@ -29,8 +27,6 @@ export const Cabin = () => {
       if (!querySnapshot.empty) {
         const flightDoc = querySnapshot.docs[0].data();
         setSeatData({
-          economySeats: flightDoc.economySeats,
-          businessSeats: flightDoc.businessSeats,
           seatMap: flightDoc.seatMap || {},
         });
       }
@@ -42,6 +38,7 @@ export const Cabin = () => {
     window.addEventListener("resize", checkScreen);
     return () => window.removeEventListener("resize", checkScreen);
   }, [flightId]);
+
   return (
     <div className="z-50">
       <div className="relative mx-auto space-y-4 md:pl-2 lg:pl-0 xl:pl-2 w-fit">
@@ -54,8 +51,6 @@ export const Cabin = () => {
             <SeatRow
               key={rowNum}
               rowNumber={rowNum}
-              availableBusinessSeats={seatData?.businessSeats}
-              availableEconomySeats={seatData?.economySeats}
               seatMap={seatData?.seatMap}
             />
           ))}
@@ -67,8 +62,6 @@ export const Cabin = () => {
             <SeatRow
               key={rowNum}
               rowNumber={rowNum}
-              availableBusinessSeats={seatData?.businessSeats}
-              availableEconomySeats={seatData?.economySeats}
               seatMap={seatData?.seatMap}
             />
           ))}
@@ -77,8 +70,6 @@ export const Cabin = () => {
             <SeatRow
               key={rowNum}
               rowNumber={rowNum}
-              availableBusinessSeats={seatData?.businessSeats}
-              availableEconomySeats={seatData?.economySeats}
               seatMap={seatData?.seatMap}
             />
           ))}
@@ -87,8 +78,6 @@ export const Cabin = () => {
             <SeatRow
               key={rowNum}
               rowNumber={rowNum}
-              availableBusinessSeats={seatData?.businessSeats}
-              availableEconomySeats={seatData?.economySeats}
               seatMap={seatData?.seatMap}
             />
           ))}
@@ -97,8 +86,6 @@ export const Cabin = () => {
             <SeatRow
               key={rowNum}
               rowNumber={rowNum}
-              availableBusinessSeats={seatData?.businessSeats}
-              availableEconomySeats={seatData?.economySeats}
               seatMap={seatData?.seatMap}
             />
           ))}

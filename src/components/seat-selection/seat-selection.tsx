@@ -6,43 +6,59 @@ import { FaCheck } from "react-icons/fa";
 import { useSeat } from "../../../context/selectSeatContext";
 import { useRouter } from "next/navigation";
 import { useFlightContext } from "../../../context/FlightContext";
+import { usePassengerForm } from "../../../context/passengerformContext";
+import { useFlightSearchContext } from "../../../context/flightSearchContext";
 
 type Props = {};
 
 const SeatSelection = (props: Props) => {
-  const { selectedSeats, seatClass } = useSeat();
-  const { selectedFlights } = useFlightContext();
+  const { outboundSeats, returnSeats, seatClass } = useSeat();
+  const { selectedFlights, currentLeg, setCurrentLeg } = useFlightContext();
+  const { formData } = usePassengerForm();
+  const { tripType } = useFlightSearchContext();
+  const selectedSeats = [outboundSeats, returnSeats].flat();
   const router = useRouter();
-  const handleNextFlight = () => {
+
+  const handlePayment = () => {
     router.push("/payment");
   };
 
+  const handleNextFlight = () => {
+    if (tripType === "round-trip" && currentLeg === "outgoing") {
+      setCurrentLeg?.("return");
+      // Clear previous selections or reset seat selection state if needed
+      // For example: clear seatClass or selectedSeats if you store separately per leg
+    } else {
+      // If it's not a round-trip, or we're already on return leg
+      handlePayment();
+    }
+  };
   return (
     <div className=" relative bg-blur backdrop-blur-md md:h-screen flex flex-col justify-between">
       {/* Flight Header */}
       <div className="grid grid-cols-1 md:grid-cols-3 text-white">
         <div className="bg-[#1e1f3a] px-6 py-5 flex items-center justify-between ">
           <div>
-            <h4 className="text-2xl">{selectedFlights[0]?.departure}</h4>
+            <h4 className="text-2xl">{selectedFlights?.departure}</h4>
             <p className="text-xs text-gray-300">California, US</p>
           </div>
           <GoArrowRight size={32} className="text-gray-100" />
           <div>
-            <h4 className="text-2xl">{selectedFlights[0]?.arrival}</h4>
+            <h4 className="text-2xl">{selectedFlights?.arrival}</h4>
             <p className="text-xs text-gray-300">Tokyo, Japan</p>
           </div>
         </div>
         <div className="bg-indigo-500 px-6 py-5 ">
           <div className="text-base">
-            {selectedFlights[0]?.departureDate?.split("T")[0]} |{" "}
-            {selectedFlights[0]?.departureTime || ""}
+            {selectedFlights?.departureDate?.split("T")[0]} |{" "}
+            {selectedFlights?.departureTime || ""}
           </div>
           <div className="text-xs">Departing</div>
         </div>
         <div className="bg-[#1e1f3a] px-6 py-5 ">
           <div className="text-base">
-            {selectedFlights[0]?.arrivalDate?.split("T")[0]} |{" "}
-            {selectedFlights[0]?.arrivalTime}
+            {selectedFlights?.arrivalDate?.split("T")[0]} |{" "}
+            {selectedFlights?.arrivalTime}
           </div>
           <div className="text-xs text-gray-300">Arriving</div>
         </div>
@@ -148,7 +164,9 @@ const SeatSelection = (props: Props) => {
       <div className="flex flex-col md:flex-row px-4 md:px-6 bg-[#CBD4E6]/30 md:items-center md:justify-between border-t py-4 mt-4 text-sm text-gray-600">
         <div>
           <p className="text-sm text-gray-400 font-semibold">Passenger 1</p>
-          <p className="text-gray-600 text-lg">Sofia Knowles</p>
+          <p className="text-gray-600 text-lg">
+            {formData?.firstName} {formData?.lastName}
+          </p>
         </div>
         <div className="text-left mt-2 md:mt-0">
           <p className="text-sm text-gray-400">Seat number</p>
@@ -172,9 +190,13 @@ const SeatSelection = (props: Props) => {
           </button>
           <button
             onClick={handleNextFlight}
-            className="px-5 py-[13px] text-base bg-gray-400/30  text-gray-400 border-gray-400 rounded"
+            disabled={selectedSeats.length === 0}
+            type="button"
+            className="px-5 py-[13px] text-base disabled:bg-gray-400/30 border-gray-400 bg-[#605DEC] text-white  disabled:text-gray-400 disabled:border-gray-400 rounded"
           >
-            Next flight
+            {tripType === "round-trip" && currentLeg === "outgoing"
+              ? "Next flight"
+              : "Payment method"}
           </button>
         </div>
       </div>

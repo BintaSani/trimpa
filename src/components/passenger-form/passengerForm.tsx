@@ -6,19 +6,27 @@ type Props = {};
 
 const PassengerForm = (props: Props) => {
   const [bags, setBags] = useState(1);
-  const { formData, updateField } = usePassengerForm();
-
-  const [isFormValid, setIsFormValid] = useState(false);
+  const { formData, updateField, isFormValid, setIsFormValid } =
+    usePassengerForm();
+  const [sameAsPassenger, setSameAsPassenger] = useState(false);
 
   useEffect(() => {
-    // Required fields
+    if (sameAsPassenger) {
+      updateField("emergencyFirstName", formData.firstName);
+      updateField("emergencyLastName", formData.lastName);
+      updateField("emergencyEmail", formData.email);
+      updateField("emergencyPhone", formData.phone);
+    }
+  }, [sameAsPassenger]);
+
+  // Validate form
+  useEffect(() => {
     const {
       firstName,
       lastName,
       dob,
       email,
       phone,
-      knownTravelerNumber,
       emergencyFirstName,
       emergencyLastName,
       emergencyPhone,
@@ -31,14 +39,24 @@ const PassengerForm = (props: Props) => {
       dob.trim() &&
       email.trim() &&
       phone.trim() &&
-      knownTravelerNumber.trim() &&
       emergencyFirstName.trim() &&
       emergencyLastName.trim() &&
-      emergencyEmail.trim() &&
-      emergencyPhone.trim();
+      emergencyPhone.trim() &&
+      emergencyEmail.trim();
 
     setIsFormValid(Boolean(allRequiredFilled));
-  }, [formData]);
+  }, [
+    formData.firstName,
+    formData.lastName,
+    formData.dob,
+    formData.email,
+    formData.phone,
+    formData.emergencyFirstName,
+    formData.emergencyLastName,
+    formData.emergencyPhone,
+    formData.emergencyEmail,
+    setIsFormValid,
+  ]);
 
   //   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //     const { name, value } = e.target;
@@ -155,7 +173,13 @@ const PassengerForm = (props: Props) => {
           Emergency contact information
         </h4>
         <div className="col-span-3 mb-6">
-          <input type="checkbox" id="same" className="mr-2" />
+          <input
+            type="checkbox"
+            id="same"
+            className="mr-2"
+            checked={sameAsPassenger}
+            onChange={(e) => setSameAsPassenger(e.target.checked)}
+          />
           <label htmlFor="same" className="text-base text-gray-600">
             Same as passenger 1
           </label>
@@ -169,6 +193,7 @@ const PassengerForm = (props: Props) => {
             type="text"
             placeholder="First name*"
             className="input"
+            disabled={sameAsPassenger}
           />
           <input
             name="emergencyLastName"
@@ -177,6 +202,7 @@ const PassengerForm = (props: Props) => {
             type="text"
             placeholder="Last name*"
             className="input"
+            disabled={sameAsPassenger}
           />
           <input
             name="emergencyEmail"
@@ -185,6 +211,7 @@ const PassengerForm = (props: Props) => {
             type="email"
             placeholder="Email address*"
             className="input"
+            disabled={sameAsPassenger}
           />
           <input
             name="emergencyPhone"
@@ -193,6 +220,7 @@ const PassengerForm = (props: Props) => {
             type="tel"
             placeholder="Phone number*"
             className="input"
+            disabled={sameAsPassenger}
           />
         </div>
 

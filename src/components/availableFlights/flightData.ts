@@ -5,7 +5,18 @@ export type StopInfo = {
 
 export type AdditionalService = {
   type: string;
-  price: string;
+  amount: string;
+};
+export type Price = {
+  additionalServices: AdditionalService[];
+  base: string;
+  currency: string;
+  total: string;
+  grandTotal: string;
+  fees: {
+    amount: string;
+    type: string;
+  };
 };
 
 export type TransformedFlightOffer = {
@@ -16,6 +27,9 @@ export type TransformedFlightOffer = {
   durationTwo?: string;
   airline: string;
   airlineTwo?: string;
+  airlineCode?: string;
+  airlineCodeTwo?: string;
+  returnAirlineCode?: string;
   departureTime: string;
   arrivalTime: string;
   departureTimeTwo?: string;
@@ -28,12 +42,19 @@ export type TransformedFlightOffer = {
   arrival?: string;
   departureTwo?: string;
   arrivalTwo?: string;
+  terminal?: string;
+  arrivalTerminal?: string;
+  returnTerminal?: string;
+  returnArrivalTerminal?: string;
+  flightNumber?: string;
+  returnFlightNumber?: string;
   numberOfStops: number;
   numberOfStopsTwo?: number;
+  outgoingSeats?: [];
+  returningSeats?: [];
   stops: StopInfo[];
   stopsTwo?: StopInfo[];
-  totalCost: string;
-  currency: string;
+  price: Price;
   isOneWay: boolean;
   additionalServices: AdditionalService[];
   airlineLogo: string;
@@ -125,13 +146,16 @@ export function transformFlightOffers(data: any): TransformedFlightOffer[] {
       );
 
     return {
-      id: firstSegment.id,
-      returnId: secondSegment?.id,
+      id: firstSegment.number,
+      returnId: secondSegment?.number,
       numberOfSeatsAvailable: numberOfSeatsAvailable,
       duration: formatDuration(itinerary.duration),
       durationTwo: formatDuration(itineraryTwo?.duration),
       airline: airlineName,
       airlineTwo: airlineNameTwo ? airlineNameTwo : "",
+      airlineCode: airlineCode,
+      airlineCodeTwo: airlineCodeTwo ? airlineCodeTwo : "",
+      returnAirlineCode: airlineCodeTwo ? airlineCodeTwo : "",
       departureTime: formatTime(firstSegment.departure.at),
       departureDate: firstSegment.departure.at,
       returnDepartureDate: secondSegment?.departure.at,
@@ -142,6 +166,12 @@ export function transformFlightOffers(data: any): TransformedFlightOffer[] {
       arrivalTimeTwo: formatTime(
         segmentsTwo?.[segmentsTwo?.length - 1].arrival.at
       ),
+      terminal: firstSegment.departure.terminal,
+      arrivalTerminal: firstSegment.arrival.terminal,
+      returnTerminal: secondSegment?.departure.terminal,
+      returnArrivalTerminal: secondSegment?.arrival.terminal,
+      flightNumber: firstSegment.number,
+      returnFlightNumber: secondSegment?.number,
       numberOfStops: segments.length - 1,
       numberOfStopsTwo: segmentsTwo?.length - 1,
       stops,
@@ -150,8 +180,7 @@ export function transformFlightOffers(data: any): TransformedFlightOffer[] {
       arrival: lastSegment.arrival.iataCode,
       departureTwo: secondSegment?.departure.iataCode,
       arrivalTwo: secondSegment?.arrival.iataCode,
-      totalCost: offer.price.total,
-      currency: offer.price.currency,
+      price: offer.price,
       isOneWay: isOneWay,
       additionalServices,
       airlineLogo: `https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/${
