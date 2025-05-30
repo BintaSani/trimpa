@@ -4,12 +4,14 @@ import { SiVisa } from "react-icons/si";
 import Image from "next/image";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { FlightCreateSeatData } from "@/lib/createSeatmap";
+import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import { useFlightContext } from "../../../context/FlightContext";
 import { db } from "@/lib/firebase";
 
 const FlightSummaryComponent = () => {
   const { selectedFlights } = useFlightContext();
   const flightId = selectedFlights?.id || "";
+  const { tripType } = useFlightSearchContext();
   const [data, setData] = useState<FlightCreateSeatData | null>(null);
 
   useEffect(() => {
@@ -47,9 +49,9 @@ const FlightSummaryComponent = () => {
           airlineLogo={data?.airline.airlineCode}
           departureTime={data?.time.departureTime}
           arrivalTime={data?.time.arrivalTime}
-          stops={data?.stops.outboundStops[0]?.location}
-          stopsDuration={data?.stops.outboundStops[0]?.duration}
-          numberOfStops={data?.stops.numberOfOutboundStops}
+          stops={data?.stops?.outboundStops[0]?.location || ""}
+          stopsDuration={data?.stops?.outboundStops[0]?.duration || ""}
+          numberOfStops={data?.stops?.numberOfOutboundStops}
           price={
             data?.oneWay !== true
               ? Number(data?.price.totalCost) / 2
@@ -61,29 +63,31 @@ const FlightSummaryComponent = () => {
         />
       </div>
 
-      <div className="mb-14">
-        <h4 className="text-lg font-medium">Arriving March 21st, 2021</h4>
-        <FlightCard
-          seat={data?.returningSeats}
-          seatClass={data?.returningClass || "economy"}
-          duration={data?.duration?.returnDuration}
-          airlineName={data?.airline.returnAirline}
-          airlineLogo={data?.airline.returnAirlineCode}
-          departureTime={data?.time.returnDepartureTime}
-          arrivalTime={data?.time.returnArrivalTime}
-          stops={data?.stops.returnStops?.[0].location}
-          stopsDuration={data?.stops.returnStops?.[0].duration}
-          numberOfStops={data?.stops.numberOfReturnStops}
-          price={
-            data?.oneWay !== true
-              ? Number(data?.price.totalCost) / 2
-              : data?.price.totalCost
-          }
-          currency={data?.price.currency}
-          typeOfTrip={data?.oneWay ? "one way" : "round trip"}
-          bags={data?.formData?.bags || 0}
-        />
-      </div>
+      {tripType === "round-trip" && (
+        <div className="mb-14">
+          <h4 className="text-lg font-medium">Arriving March 21st, 2021</h4>
+          <FlightCard
+            seat={data?.returningSeats}
+            seatClass={data?.returningClass || "economy"}
+            duration={data?.duration?.returnDuration}
+            airlineName={data?.airline.returnAirline}
+            airlineLogo={data?.airline.returnAirlineCode}
+            departureTime={data?.time.returnDepartureTime}
+            arrivalTime={data?.time.returnArrivalTime}
+            stops={data?.stops?.returnStops?.[0]?.location || ""}
+            stopsDuration={data?.stops?.returnStops?.[0]?.duration || ""}
+            numberOfStops={data?.stops?.numberOfReturnStops}
+            price={
+              data?.oneWay !== true
+                ? Number(data?.price.totalCost) / 2
+                : data?.price.totalCost
+            }
+            currency={data?.price.currency}
+            typeOfTrip={data?.oneWay ? "one way" : "round trip"}
+            bags={data?.formData?.bags || 0}
+          />
+        </div>
+      )}
 
       <h4 className="text-2xl font-semibold mb-6">Price breakdown</h4>
       <PriceBreakdown
@@ -136,8 +140,8 @@ const FlightCard = ({
   airlineLogo: string | undefined;
   departureTime: string | undefined;
   arrivalTime: string | undefined;
-  stops: string | undefined;
-  stopsDuration: string | undefined;
+  stops?: string | undefined;
+  stopsDuration?: string | undefined;
   numberOfStops: number | undefined;
   price: string | number | undefined;
   currency: string | undefined;
@@ -168,7 +172,9 @@ const FlightCard = ({
         <p className="text-sm text-transparent">value</p>
       </div>
       <div className="text-right">
-        <p className="font-semibold">{numberOfStops} stop(s)</p>
+        <p className="font-semibold">
+          {numberOfStops === 0 ? "Nonstop" : `${numberOfStops} stop(s)`}
+        </p>
         <p className="text-sm text-gray-400">
           {stops} {stopsDuration}
         </p>
