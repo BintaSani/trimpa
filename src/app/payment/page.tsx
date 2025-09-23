@@ -13,10 +13,10 @@ type Props = {};
 const Payment = (props: Props) => {
   const { selectedFlights } = useFlightContext();
   const router = useRouter();
-  const handleConfirmAndPay = () => {
-    // Handle payment confirmation logic here
-    router.push("/flight-summary");
-  };
+  // const handleConfirmAndPay = () => {
+  //   // Handle payment confirmation logic here
+  //   router.push("/flight-summary");
+  // };
   return (
     <div className="w-full">
       <Nav />
@@ -33,14 +33,14 @@ const Payment = (props: Props) => {
         </div>
         <div className="w-full lg:w-[40%] xl:w-[33.33%] ">
           <Selectedflight selectedFlight={selectedFlights} />
-          <div className="pr-4 mt-4 w-full flex items-center justify-end">
+          {/* <div className="pr-4 mt-4 w-full flex items-center justify-end">
             <button
               onClick={handleConfirmAndPay}
               className="px-4 py-2 border-gray-400 bg-gray-200 text-gray-500 rounded "
             >
               Confirm and pay
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       <Footer />

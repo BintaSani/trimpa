@@ -6,8 +6,7 @@ type Props = {};
 
 const PassengerForm = (props: Props) => {
   const [bags, setBags] = useState(1);
-  const { formData, updateField, isFormValid, setIsFormValid } =
-    usePassengerForm();
+  const { formData, updateField, setIsFormValid } = usePassengerForm();
   const [sameAsPassenger, setSameAsPassenger] = useState(false);
 
   useEffect(() => {
@@ -268,12 +267,12 @@ const PassengerForm = (props: Props) => {
             <button className="px-4 py-2 border border-[var(--color-purple-blue)] text-[var(--color-purple-blue)] rounded hover:bg-[var(--color-purple-blue)] hover:text-white">
               Save and close
             </button>
-            <button
+            {/* <button
               className="px-4 py-2 border-gray-400 bg-[#605DEC] text-gray-100 rounded disabled:opacity-50"
               disabled={!isFormValid}
             >
               Select seats
-            </button>
+            </button> */}
           </div>
         </div>
       </form>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import FlightSearch from "@/components/form/form";
 import Nav from "@/components/nav-bar/nav";
 import Dropdown from "@/components/dropdown/dropdown";
@@ -28,12 +28,29 @@ const Flight = (props: Props) => {
     setSelectedFlights(flight);
   };
 
-  // const totalCost = selectedFlights.reduce((sum, flight) => {
-  //   const numericPrice = parseFloat(flight.totalCost.toString().replace(/[^0-9.]/g, ""));
-  //   return sum + numericPrice;
-  // }, 0);
+  // On load
+  useEffect(() => {
+    const savedFlight = localStorage.getItem("selectedFlight");
+    if (savedFlight) {
+      setSelectedFlights(JSON.parse(savedFlight));
+    }
+  }, []);
+
+  // On update
+  // useEffect(() => {
+  //   if (selectedFlights) {
+  //     localStorage.setItem("selectedFlight", JSON.stringify(selectedFlights));
+  //   } else {
+  //     localStorage.removeItem("selectedFlight");
+  //   }
+  // }, [selectedFlights]);
 
   const handleSaveAndClose = () => {
+    if (selectedFlights) {
+      localStorage.setItem("selectedFlight", JSON.stringify(selectedFlights));
+    } //  else {
+    //   localStorage.removeItem("selectedFlight");
+    // }
     router.push("/passenger-info");
   };
 
@@ -64,7 +81,7 @@ const Flight = (props: Props) => {
                 <span className="absolute inset-0 border-2 border-white rounded-full"></span>
               </button> */}
             </div>
-            <div className='w-full bg-[url("/images/map.png")] bg-contain md:bg-fit 2xl:bg-cover h-[100px] bg-no-repeat mt-12 flex items-center justify-center md:h-[161px] xl:h-[171px]'>
+            <div className='w-full bg-[url("/images/map.webp")] bg-contain md:bg-fit 2xl:bg-cover h-[100px] bg-no-repeat mt-12 flex items-center justify-center md:h-[161px] xl:h-[171px]'>
               <div className="w-[110px] md:w-[180px] xl:w-[227px] text-[9px] flex items-center text-[#1513A0] mr-8 md:mt-7 lg:-mt-3 xl:mt-4 2xl:mt-12 font-bold md:text-xs justify-between">
                 <p>{from}</p>
                 <p>{to}</p>

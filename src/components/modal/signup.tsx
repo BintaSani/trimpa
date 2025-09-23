@@ -20,6 +20,7 @@ const SignupModal = ({
   onClose: () => void;
 }) => {
   const { setIsPromoVisible } = useUI();
+  const [loading, setLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = React.useState("");
   const [signUpInfo, setSignUpInfo] = useState({
@@ -46,6 +47,17 @@ const SignupModal = ({
       setError("Please fill in all required fields.");
       return;
     }
+    const [loading, setLoading] = useState(false);
+
+    const handleGoogleSignIn = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        await SignInWithGoogle();
+      } finally {
+        setLoading(false);
+      }
+    };
     createUserWithEmailAndPassword(auth, signUpInfo.email, signUpInfo.password)
       .then((userCredential) => {
         // Signed up
@@ -60,6 +72,23 @@ const SignupModal = ({
       });
   };
 
+  async function handleGoogleSignIn(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): Promise<void> {
+    event.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    setError("");
+    try {
+      await SignInWithGoogle();
+      onClose();
+    } catch (err: any) {
+      setError("Google sign-in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-[var(--color-purple-blue)]/20 flex items-center justify-center z-100">
       <div className="bg-white p-6 xl:p-10 rounded-lg shadow-lg max-w-[500px] w-full relative">
@@ -67,7 +96,7 @@ const SignupModal = ({
         {/* Header */}
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold text-gray-600">
-            Sign up for Tripma
+            Sign up for Tripma / Sign in
           </h3>
 
           <button
@@ -145,7 +174,8 @@ const SignupModal = ({
 
           {/* Social Login Buttons */}
           <button
-            onClick={SignInWithGoogle}
+            type="button"
+            onClick={handleGoogleSignIn}
             className="w-full border border-gray-300 py-2 rounded-md flex items-center justify-center gap-2 text-gray-700 hover:bg-gray-100"
           >
             <FcGoogle /> Continue with Google

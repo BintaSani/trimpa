@@ -7,7 +7,7 @@ import { RiFacebookBoxFill } from "react-icons/ri";
 import { useSeat } from "../../../context/selectSeatContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { useFlightContext } from "../../../context/FlightContext";
-// import { useFlightSearchContext } from "../../../context/flightSearchContext";
+import { toast } from "react-toastify";
 import { db } from "@/lib/firebase";
 import { BsApple } from "react-icons/bs";
 import { useRouter } from "next/navigation";
@@ -20,6 +20,7 @@ import {
   SignInWithFacebook,
   SignInWithGoogle,
 } from "@/lib/firebase";
+import { useAuth } from "../../../context/authContext";
 
 const PaymentForm = () => {
   const [billingSame, setBillingSame] = useState(false);
@@ -29,8 +30,10 @@ const PaymentForm = () => {
   const { outboundSeats, returnSeats } = useSeat();
   const { selectedFlights } = useFlightContext();
   // const { tripType } = useFlightSearchContext();
+  const [loading, setLoading] = useState(false);
   const { formData } = usePassengerForm();
   const flightId = selectedFlights?.id || "";
+  const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -61,18 +64,25 @@ const PaymentForm = () => {
 
   const handlePaymentSuccess = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const confirmationNumber = uuidv4().slice(0, 12).toUpperCase();
 
-    const outboundSeatMapUpdate = outboundSeats.reduce((acc, seat) => {
-      acc[`seatMap.${seat}`] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
+    const outboundSeatMapUpdate = outboundSeats.reduce(
+      (acc, seat) => {
+        acc[`seatMap.${seat}`] = true;
+        return acc;
+      },
+      {} as Record<string, boolean>
+    );
 
-    const returnSeatMapUpdate = returnSeats.reduce((acc, seat) => {
-      acc[`seatMap.${seat}`] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
+    const returnSeatMapUpdate = returnSeats.reduce(
+      (acc, seat) => {
+        acc[`seatMap.${seat}`] = true;
+        return acc;
+      },
+      {} as Record<string, boolean>
+    );
 
     let outgoingClass = "Economy"; // Default
     let returnClass = "Economy"; // Default
@@ -121,20 +131,27 @@ const PaymentForm = () => {
       }, // Store payment info
     });
 
+    if (!user) {
+      createUserWithEmailAndPassword(auth, cardInfo.email, cardInfo.password)
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          CreateUserProfileDocument(user);
+          // ...
+          router.push("/flight-summary");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          toast.error(error.message);
+          // ..
+        });
+    }
+    setLoading(false);
     router.push("/flight-summary");
+  };
 
-    createUserWithEmailAndPassword(auth, cardInfo.email, cardInfo.password)
-      .then((userCredential) => {
-        // Signed up
-        const user = userCredential.user;
-        CreateUserProfileDocument(user);
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
+  const goBack = () => {
+    router.push("/select-seat");
   };
 
   return (
@@ -194,65 +211,71 @@ const PaymentForm = () => {
         </>
       )}
 
-      <h2 className="text-lg font-semibold mt-10 mb-4">Create an account</h2>
-      <label className="flex items-center mb-6">
-        <input
-          type="checkbox"
-          name="saveCard"
-          checked={saveCard}
-          onChange={(e) => setSaveCard(e.target.checked)}
-          className="mr-2 text-base "
-        />
-        Save card and create account for later
-      </label>
+      {!user && (
+        <h2 className="text-lg font-semibold mt-10 mb-4">Create an account</h2>
+      )}
+      {!user && (
+        <label className="flex items-center mb-6">
+          <input
+            type="checkbox"
+            name="saveCard"
+            checked={saveCard}
+            onChange={(e) => setSaveCard(e.target.checked)}
+            className="mr-2 text-base "
+          />
+          Save card and create account for later
+        </label>
+      )}
 
-      <div className="flex flex-col gap-6 lg:w-[70%]">
-        <input
-          name="email"
-          onChange={handleInput}
-          value={cardInfo.email}
-          placeholder="Email address or phone number"
-          className="input"
-        />
-        <input
-          name="password"
-          onChange={handleInput}
-          value={cardInfo.password}
-          placeholder="Password"
-          type="password"
-          className="input"
-        />
+      {!user && (
+        <div className="flex flex-col gap-6 lg:w-[70%]">
+          <input
+            name="email"
+            onChange={handleInput}
+            value={cardInfo.email}
+            placeholder="Email address or phone number"
+            className="input"
+          />
+          <input
+            name="password"
+            onChange={handleInput}
+            value={cardInfo.password}
+            placeholder="Password"
+            type="password"
+            className="input"
+          />
 
-        <div className="flex items-center my-4">
-          <hr className="flex-grow border-gray-200" />
-          <span className="mx-2 text-gray-400">or</span>
-          <hr className="flex-grow border-gray-200" />
+          <div className="flex items-center my-4">
+            <hr className="flex-grow border-gray-200" />
+            <span className="mx-2 text-gray-400">or</span>
+            <hr className="flex-grow border-gray-200" />
+          </div>
+
+          <button
+            type="button"
+            className="border rounded border-[#605DEC] hover:bg-[#605DEC] hover:text-gray-100 bg-white text-[#605DEC] py-[11.5px] px-5 text-lg w-full flex items-center text-center"
+            onClick={SignInWithGoogle}
+          >
+            <FcGoogle className="size-[18px]" />
+            <p className="mx-auto">Sign up with Google</p>
+          </button>
+          <button
+            type="button"
+            className="border rounded border-[#605DEC] hover:bg-[#605DEC] hover:text-gray-100 bg-white text-[#605DEC] py-[11.5px] px-5 text-lg w-full flex items-center text-center mt-2"
+          >
+            <BsApple className="size-[18px] text-gray-900" />
+            <p className="mx-auto">Continue with Apple</p>
+          </button>
+          <button
+            type="button"
+            onClick={SignInWithFacebook}
+            className="border rounded border-[#605DEC] hover:bg-[#605DEC] hover:text-gray-100 bg-white text-[#605DEC] py-[11.5px] px-5 text-lg w-full flex items-center text-center mt-2"
+          >
+            <RiFacebookBoxFill className="size-[18px]" />
+            <p className="mx-auto">Continue with Facebook</p>
+          </button>
         </div>
-
-        <button
-          type="button"
-          className="border rounded border-[#605DEC] hover:bg-[#605DEC] hover:text-gray-100 bg-white text-[#605DEC] py-[11.5px] px-5 text-lg w-full flex items-center text-center"
-          onClick={SignInWithGoogle}
-        >
-          <FcGoogle className="size-[18px]" />
-          <p className="mx-auto">Sign up with Google</p>
-        </button>
-        <button
-          type="button"
-          className="border rounded border-[#605DEC] hover:bg-[#605DEC] hover:text-gray-100 bg-white text-[#605DEC] py-[11.5px] px-5 text-lg w-full flex items-center text-center mt-2"
-        >
-          <BsApple className="size-[18px] text-gray-900" />
-          <p className="mx-auto">Continue with Apple</p>
-        </button>
-        <button
-          type="button"
-          onClick={SignInWithFacebook}
-          className="border rounded border-[#605DEC] hover:bg-[#605DEC] hover:text-gray-100 bg-white text-[#605DEC] py-[11.5px] px-5 text-lg w-full flex items-center text-center mt-2"
-        >
-          <RiFacebookBoxFill className="size-[18px]" />
-          <p className="mx-auto">Continue with Facebook</p>
-        </button>
-      </div>
+      )}
 
       <div className="mt-12 text-sm ">
         <h3 className="font-semibold text-lg">Cancellation policy</h3>
@@ -270,15 +293,19 @@ const PaymentForm = () => {
       </div>
 
       <div className="flex gap-4 text-sm md:text-large mt-14">
-        <button className="px-5 py-[11.5px] rounded border border-[#605DEC] text-[#605DEC]">
+        <button
+          onClick={goBack}
+          className="px-5 py-[11.5px] rounded border border-[#605DEC] text-[#605DEC]"
+        >
           Back to seat select
         </button>
         <button
           className="px-5 py-[11.5px] rounded bg-[#605DEC] text-gray-100"
           // disabled
           type="submit"
+          disabled={loading}
         >
-          Confirm and pay
+          {loading ? "Confirming..." : "Confirm and pay"}
         </button>
       </div>
     </form>

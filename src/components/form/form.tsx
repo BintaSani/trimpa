@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { MdFlightTakeoff, MdFlightLand } from "react-icons/md";
 import { DatePickerWithRange } from "../datePicker/datePicker";
 import { FaUser, FaPlus, FaMinus } from "react-icons/fa6";
@@ -23,33 +23,34 @@ const FlightSearch = (props: Props) => {
     adults,
     minors,
     date,
+    tripType,
+    flightData,
     setFrom,
     setTo,
     setAdults,
     setMinors,
     setDate,
-    flightData,
     setFlightData,
-    tripType,
+    setDepartureCity,
+    setArrivalCity,
   } = useFlightSearchContext();
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
-    null
-  );
-  const [isLoading, setIsLoading] = useState(true);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const path = usePathname();
+  const [fromInput, setFromInput] = useState(""); // local typing state
+  const [toInput, setToInput] = useState(""); // local typing state
 
   // console.log("Flight Data:", flightData);
   const fetchFlights = async () => {
     if (loading || !token) return;
+    setIsLoading(true);
     const departureDate = date.from;
     const returnDate = date.to;
     const formattedDate = departureDate?.toISOString().split("T")[0];
     const formattedReturnDate = returnDate?.toISOString().split("T")[0];
     try {
-      setIsLoading(true);
-
       const response = await fetch(
         `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${from}&destinationLocationCode=${to}&departureDate=${formattedDate}${
           tripType === "round-trip" ? `&returnDate=${formattedReturnDate}` : ""
@@ -65,6 +66,7 @@ const FlightSearch = (props: Props) => {
 
       const data = await response.json();
       const flightData = data.data;
+      // console.log("headers", response.headers);
       if (flightData.length > 0) {
         if (setFlightData) {
           setFlightData(data);
@@ -90,17 +92,22 @@ const FlightSearch = (props: Props) => {
     const cleaned = data.data.map((entry: any) => ({
       name: entry.name,
       iataCode: entry.iataCode,
+      country: entry.address.countryName,
     }));
 
     setAirports(cleaned);
   };
 
-  const handleSelect = (iataCode: string) => {
+  const handleSelect = (iataCode: string, name: string, country: string) => {
     if (isOpen) {
-      setFrom(iataCode);
+      setFrom(iataCode); // context: IATA code
+      setFromInput(`${name}, ${country}`); // show nice text in input
+      setDepartureCity(name, country);
       setIsOpen(false);
     } else if (isOpen1) {
       setTo(iataCode);
+      setToInput(`${name}, ${country}`);
+      setArrivalCity(name, country);
       setIsOpen1(false);
     }
   };
@@ -126,160 +133,175 @@ const FlightSearch = (props: Props) => {
     const keyword = e.target.value;
 
     // Clear the previous timer if any
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
     }
 
     // Set a new timer to fetch after 2 seconds (debounce)
-    const timer = setTimeout(() => {
+    debounceTimer.current = setTimeout(() => {
       if (keyword.length >= 3) {
-        fetchIataCodes(keyword); // Fetch the data based on the input
-        setIsOpen(true); // Open the dropdown to show results
+        fetchIataCodes(keyword);
+        setIsOpen(true);
       }
-    }, 1000); // Delay of 2 seconds
-
-    // Save the timer ID to clear it later
-    setDebounceTimer(timer);
+    }, 1000);
   };
 
   return (
-    <div
-      className={`gap-[0.1px] xl:bg-white xl:shadow-lg rounded space-y-2 lg:space-y-0 lg:flex items-center xl:h-12 ${
-        path === "/flights" ? "lg:w-[872px]" : "xl:w-[1200px] lg:w-full mx-auto"
-      } z-10`}
-    >
-      {/* From Where */}
-      <div className="relative flex-1 z-10">
-        <button
-          className="w-full flex items-center border focus:ring-[var(--color-purple-blue)] whitespace-nowrap focus:ring-1 border-gray-300 rounded-l-md p-3 cursor-pointer bg-white"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <MdFlightTakeoff className="text-[var(--color-grey-400)] mr-2 size-5" />
-          <span className="text-[var(--color-grey-400)]">
-            {from ? (
+    <div className="w-full">
+      <div
+        className={`gap-[0.1px] xl:bg-white xl:shadow-lg rounded space-y-2 lg:space-y-0 lg:flex items-center xl:h-12 ${
+          path === "/flights"
+            ? "lg:w-[872px]"
+            : "xl:w-[1200px] lg:w-[872px] mx-auto"
+        } z-10`}
+      >
+        {/* From Where */}
+        <div className="relative flex-1 z-10">
+          <button
+            className="w-full flex items-center border focus:ring-[var(--color-purple-blue)] whitespace-nowrap focus:ring-1 border-gray-300 rounded-l-md p-3 cursor-pointer bg-white"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <MdFlightTakeoff className="text-[var(--color-grey-400)] mr-2 size-5" />
+            <span className="text-[var(--color-grey-400)]">
+              {/* {from ? (
               from
-            ) : (
+            ) : ( */}
               <input
                 type="text"
-                onChange={(e) => handleInputChange(e, setIsOpen)}
+                value={fromInput}
+                onChange={(e) => {
+                  setFromInput(e.target.value); // update typing
+                  handleInputChange(e, setIsOpen);
+                }}
                 className="placeholder:text-[var(--color-grey-400)] w-full border-none focus:outline-none"
                 placeholder="From where?"
               />
-            )}
-          </span>
-        </button>
+              {/* )} */}
+            </span>
+          </button>
 
-        {isOpen && airports.length > 0 && (
-          <ul className="absolute w-[90%] right-0 bg-white shadow-lg p-4 rounded-md mt-2 z-10">
-            {airports.map((option, index) => (
-              <li
-                key={index}
-                className="p-3 hover:bg-[var(--color-purple-blue)] hover:text-white rounded cursor-pointer"
-                onClick={() => handleSelect(option.iataCode)}
-              >
-                {option.name} ({option.iataCode})
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+          {isOpen && airports.length > 0 && (
+            <ul className="absolute w-[90%] right-0 bg-white shadow-lg p-4 rounded-md mt-2 z-10">
+              {airports.map((option, index) => (
+                <li
+                  key={index}
+                  className="p-3 hover:bg-[var(--color-purple-blue)] hover:text-white rounded cursor-pointer"
+                  onClick={() =>
+                    handleSelect(option.iataCode, option.name, option.country)
+                  }
+                >
+                  {option.name} ({option.iataCode})
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
-      {/* To Where */}
-      <div className="relative flex-1">
-        <button
-          className=" w-full focus:ring-[var(--color-purple-blue)] whitespace-nowrap focus:ring-1 flex items-center border border-gray-300  p-3 cursor-pointer bg-white"
-          onClick={() => setIsOpen1(!isOpen1)}
-        >
-          <MdFlightLand className="text-[var(--color-grey-400)] mr-2 size-5" />
-          <span className="text-[var(--color-grey-400)]">
-            {to ? (
+        {/* To Where */}
+        <div className="relative flex-1">
+          <button
+            className=" w-full focus:ring-[var(--color-purple-blue)] whitespace-nowrap focus:ring-1 flex items-center border border-gray-300  p-3 cursor-pointer bg-white"
+            onClick={() => setIsOpen1(!isOpen1)}
+          >
+            <MdFlightLand className="text-[var(--color-grey-400)] mr-2 size-5" />
+            <span className="text-[var(--color-grey-400)]">
+              {/* {to ? (
               to
-            ) : (
+            ) : ( */}
               <input
                 type="text"
-                onChange={(e) => handleInputChange(e, setIsOpen1)}
+                value={toInput}
+                onChange={(e) => {
+                  setToInput(e.target.value); // update typing
+                  handleInputChange(e, setIsOpen1);
+                }}
                 className="placeholder:text-[var(--color-grey-400)] w-full border-none focus:outline-none"
                 placeholder="Where to?"
               />
-            )}
-          </span>
-        </button>
+              {/* )} */}
+            </span>
+          </button>
 
-        {isOpen1 && airports.length > 0 && (
-          <ul className="absolute w-[90%] right-0 p-4 bg-white shadow-lg rounded-md mt-2 z-10">
-            {airports.map((option, index) => (
-              <li
-                key={index}
-                className="p-3 hover:bg-[var(--color-purple-blue)] hover:text-white rounded cursor-pointer"
-                onClick={() => handleSelect(option.iataCode)}
-              >
-                {option.name} ({option.iataCode})
+          {isOpen1 && airports.length > 0 && (
+            <ul className="absolute w-[90%] right-0 p-4 bg-white shadow-lg rounded-md mt-2 z-10">
+              {airports.map((option, index) => (
+                <li
+                  key={index}
+                  className="p-3 hover:bg-[var(--color-purple-blue)] hover:text-white rounded cursor-pointer"
+                  onClick={() =>
+                    handleSelect(option.iataCode, option.name, option.country)
+                  }
+                >
+                  {option.name} ({option.iataCode})
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Depart - Return */}
+        <div className="relative flex-1">
+          <DatePickerWithRange date={date} setDate={setDate} />
+        </div>
+
+        {/* Adults & Minors Dropdown */}
+        <div className="relative flex-1 xl:flex-none xl:w-[17.5%]">
+          <button
+            className="w-full focus:ring-[var(--color-purple-blue)] focus:ring-1 flex items-center border border-gray-300 rounded-r-md p-3 cursor-pointer bg-white"
+            onClick={() => setIsMenu(!isMenu)}
+          >
+            <FaUser className="text-[var(--color-grey-400)] mr-2 size-5" />
+            <span className="text-[var(--color-grey-400)]">{adults} Adult</span>
+          </button>
+
+          {isMenu && (
+            <ul className="absolute w-[110%] top-11 shadow-[#5f5dec5b] -right-10 p-4 bg-white shadow-lg rounded-md mt-2 z-10">
+              <li className="flex items-center justify-between">
+                <span>Adults:</span>
+                <button
+                  className="p-1.5 h-fit rounded bg-[#5f5dec30] text-[var(--color-purple-blue)]"
+                  onClick={() => setAdults(Math.max(1, adults - 1))}
+                >
+                  <FaMinus className="sixe-4" />
+                </button>
+                <span>{adults}</span>
+                <button
+                  className="p-1.5 h-fit rounded bg-[#5f5dec30] text-[var(--color-purple-blue)]"
+                  onClick={() => setAdults(adults + 1)}
+                >
+                  <FaPlus className="size-4" />
+                </button>
               </li>
-            ))}
-          </ul>
-        )}
-      </div>
+              <li className="flex items-center justify-between mt-2">
+                <span>Minors:</span>
+                <button
+                  className="p-1.5 h-fit rounded bg-[#5f5dec30] text-[var(--color-purple-blue)]"
+                  onClick={() => setMinors(Math.max(0, minors - 1))}
+                >
+                  <FaMinus className="sixe-4" />
+                </button>
+                <span>{minors}</span>
+                <button
+                  className="p-1.5 h-fit rounded bg-[#5f5dec30] text-[var(--color-purple-blue)]"
+                  onClick={() => setMinors(minors + 1)}
+                >
+                  <FaPlus className="size-4" />
+                </button>
+              </li>
+            </ul>
+          )}
+        </div>
 
-      {/* Depart - Return */}
-      <div className="relative flex-1">
-        <DatePickerWithRange date={date} setDate={setDate} />
-      </div>
-
-      {/* Adults & Minors Dropdown */}
-      <div className="relative flex-1 xl:flex-none xl:w-[17.5%]">
+        {/* Search Button */}
         <button
-          className="w-full focus:ring-[var(--color-purple-blue)] focus:ring-1 flex items-center border border-gray-300 rounded-r-md p-3 cursor-pointer bg-white"
-          onClick={() => setIsMenu(!isMenu)}
+          onClick={handleSearch}
+          className={`${isLoading && "cursor-not-allowed animate-pulse"} bg-[var(--color-purple-blue)] hover:scale-105 text-white px-5 py-3 h-full rounded-md`}
+          disabled={isLoading}
         >
-          <FaUser className="text-[var(--color-grey-400)] mr-2 size-5" />
-          <span className="text-[var(--color-grey-400)]">{adults} Adult</span>
+          {isLoading ? "Searching..." : "Search"}
         </button>
-
-        {isMenu && (
-          <ul className="absolute w-[110%] top-11 shadow-[#5f5dec5b] -right-10 p-4 bg-white shadow-lg rounded-md mt-2 z-10">
-            <li className="flex items-center justify-between">
-              <span>Adults:</span>
-              <button
-                className="p-1.5 h-fit rounded bg-[#5f5dec30] text-[var(--color-purple-blue)]"
-                onClick={() => setAdults(Math.max(1, adults - 1))}
-              >
-                <FaMinus className="sixe-4" />
-              </button>
-              <span>{adults}</span>
-              <button
-                className="p-1.5 h-fit rounded bg-[#5f5dec30] text-[var(--color-purple-blue)]"
-                onClick={() => setAdults(adults + 1)}
-              >
-                <FaPlus className="size-4" />
-              </button>
-            </li>
-            <li className="flex items-center justify-between mt-2">
-              <span>Minors:</span>
-              <button
-                className="p-1.5 h-fit rounded bg-[#5f5dec30] text-[var(--color-purple-blue)]"
-                onClick={() => setMinors(Math.max(0, minors - 1))}
-              >
-                <FaMinus className="sixe-4" />
-              </button>
-              <span>{minors}</span>
-              <button
-                className="p-1.5 h-fit rounded bg-[#5f5dec30] text-[var(--color-purple-blue)]"
-                onClick={() => setMinors(minors + 1)}
-              >
-                <FaPlus className="size-4" />
-              </button>
-            </li>
-          </ul>
-        )}
       </div>
-
-      {/* Search Button */}
-      <button
-        onClick={handleSearch}
-        className="bg-[var(--color-purple-blue)] hover:scale-105 text-white px-5 py-3 h-full rounded-md"
-      >
-        Search
-      </button>
+      {error && <p>{error}</p>}
     </div>
   );
 };

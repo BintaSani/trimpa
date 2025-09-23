@@ -1,12 +1,19 @@
 // /utils/createFlight.ts
 import { db, generateSeatMap } from "./firebase";
 import { doc, setDoc } from "firebase/firestore";
-import { AdditionalService } from "@/components/availableFlights/flightData";
+// import { AdditionalService } from "@/components/availableFlights/flightData";
+
+export type AdditionalService = {
+  type: string;
+  amount: string;
+};
 
 export interface FlightCreateSeatData {
   flightId: string;
   returnFlightId?: string;
   origin: string;
+  originCity: string;
+  destinationCity?: string;
   destination: string;
   departureDate: string;
   returnDate: string;
@@ -21,6 +28,7 @@ export interface FlightCreateSeatData {
   returningSeats?: [];
   outgoingClass?: string;
   returningClass?: string;
+  confirmationNumber?: string;
   paymentInfo?: {
     CardName: string;
     CardNumber: string;
@@ -28,6 +36,9 @@ export interface FlightCreateSeatData {
   };
   formData: {
     bags: number;
+    firstName: string;
+    lastName: string;
+    email: string;
   };
   stops: {
     outboundStops: {
@@ -61,10 +72,14 @@ export interface FlightCreateSeatData {
     returnAirline?: string;
     airlineCode?: string;
     returnAirlineCode?: string;
+    airlineName?: string;
   };
 }
 
-export const createFlight = async (data: FlightCreateSeatData) => {
+export const createFlight = async (
+  data: FlightCreateSeatData,
+  userId: string
+) => {
   const economySeats =
     data.numberOfAvailableSeats > 2
       ? Math.floor(data.numberOfAvailableSeats * 0.75)
@@ -78,6 +93,8 @@ export const createFlight = async (data: FlightCreateSeatData) => {
     flightId: data.flightId,
     returnFlightId: data.returnFlightId || "",
     origin: data.origin,
+    originCity: data.originCity || "",
+    destinationCity: data.destinationCity || "",
     returnOrigin: data.returnOrigin || "",
     returnDestination: data.returnDestination || "",
     destination: data.destination,
@@ -93,8 +110,10 @@ export const createFlight = async (data: FlightCreateSeatData) => {
     stops: data.stops,
     time: data.time,
     price: data.price,
+    additionalService: data.price.additionalServices ?? [],
     duration: data.duration,
     airline: data.airline,
     createdAt: new Date().toISOString(),
+    createdBy: userId,
   });
 };

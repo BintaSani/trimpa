@@ -1,21 +1,25 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Nav from "@/components/nav-bar/nav";
 import Footer from "@/components/footer/footer";
 import PassengerForm from "@/components/passenger-form/passengerForm";
 import { useFlightContext } from "../../../context/FlightContext";
 import { usePassengerForm } from "../../../context/passengerformContext";
+import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import Selectedflight from "@/components/selectedFlight/selectedflight";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createFlight } from "../../lib/createSeatmap";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../context/authContext";
 
 type Props = {};
 
 const PassengerInfo = (props: Props) => {
+  const { user } = useAuth();
   const { selectedFlights } = useFlightContext();
-  const { isFormValid, formData } = usePassengerForm();
+  const { isFormValid, formData, setFormData } = usePassengerForm();
+  const { departureCity, arrivalCity } = useFlightSearchContext();
   const logo = `https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/${selectedFlights?.airlineCode}.svg`;
   const returnLogo = `https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/${selectedFlights?.airlineCodeTwo}.svg`;
 
@@ -34,6 +38,8 @@ const PassengerInfo = (props: Props) => {
     numberOfAvailableSeats: selectedFlights?.numberOfSeatsAvailable || 0,
     oneWay: selectedFlights?.isOneWay || false,
     formData: formData || {},
+    originCity: departureCity?.name || "",
+    destinationCity: arrivalCity?.name || "",
     stops: {
       outboundStops: selectedFlights?.stops || [],
       numberOfOutboundStops: selectedFlights?.numberOfStops || 0,
@@ -60,12 +66,26 @@ const PassengerInfo = (props: Props) => {
       returnAirline: selectedFlights?.airlineTwo || "",
       airlineCode: logo || "",
       returnAirlineCode: returnLogo || "",
+      airlineName: selectedFlights?.airlineCode || "",
     },
   };
 
+  // On load
+  useEffect(() => {
+    const savedPassenger = localStorage.getItem("passengerInfo");
+    if (savedPassenger) {
+      setFormData(JSON.parse(savedPassenger));
+    }
+  }, []);
+
   const handleSubmit = async () => {
     try {
-      await createFlight(form);
+      if (user) {
+        await createFlight(form, user.uid);
+        router.push("/select-seat"); // ✅ only runs if createFlight succeeds
+      } else {
+        toast.error("User not authenticated");
+      }
     } catch (err) {
       console.error("Error creating flight:", err);
       toast.error("Failed to create flight");
@@ -74,7 +94,6 @@ const PassengerInfo = (props: Props) => {
 
   const handleSaveAndClose = () => {
     handleSubmit();
-    router.push("/select-seat");
   };
 
   return (
@@ -104,12 +123,11 @@ const PassengerInfo = (props: Props) => {
           </div>
           <div className="w-full mt-[104px] ">
             <Image
-              src="/images/bags.png"
+              src="/images/bags.webp"
               alt="passenger-bag"
               width={100}
               loading="lazy"
               sizes="100vw"
-              layout="responsive"
               height={100}
               className="w-full h-full  "
             />

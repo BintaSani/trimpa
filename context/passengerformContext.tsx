@@ -37,6 +37,7 @@ const defaultData: PassengerFormData = {
 
 const PassengerFormContext = createContext<{
   formData: PassengerFormData;
+  setFormData: React.Dispatch<React.SetStateAction<PassengerFormData>>;
   updateField: (field: keyof PassengerFormData, value: string | number) => void;
   isFormValid: boolean;
   setIsFormValid: (valid: boolean) => void;
@@ -45,6 +46,7 @@ const PassengerFormContext = createContext<{
   updateField: () => {},
   isFormValid: false,
   setIsFormValid: () => {},
+  setFormData: () => {},
 });
 
 export const usePassengerForm = () => useContext(PassengerFormContext);
@@ -66,7 +68,13 @@ export const PassengerFormProvider = ({
 
   return (
     <PassengerFormContext.Provider
-      value={{ formData, updateField, isFormValid, setIsFormValid }}
+      value={{
+        formData,
+        updateField,
+        isFormValid,
+        setFormData,
+        setIsFormValid,
+      }}
     >
       {children}
     </PassengerFormContext.Provider>

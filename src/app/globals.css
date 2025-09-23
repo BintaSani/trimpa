@@ -15,7 +15,9 @@
   --breakpoint-3xl: 1728px;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
+  --background: rgb(255, 255, 255);
   --foreground: oklch(0.145 0 0);
+  --foreground-fallback: rgb(37, 37, 37);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -84,10 +86,9 @@
   --radius-xl: calc(var(--radius) + 4px);
   --breakpoint-mdLg: 56.25rem;
   --breakpoint-3xl: 120rem;
-
 }
 .image-hover-animation {
-  background: cover; 
+  background: cover;
   transition: transform 6s cubic-bezier(0.25, 0.45, 0.45, 0.95);
 }
 
@@ -99,7 +100,6 @@ body {
   background: #ffffff;
   border: none;
   box-sizing: border-box;
-  
 }
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
@@ -118,7 +118,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #5a4fcf;
 }
-
 
 .dark {
   --background: oklch(0.145 0 0);
@@ -162,8 +161,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
-.input{
-  border: 1px solid #A1B0CC;
+.input {
+  border: 1px solid #a1b0cc;
   border-radius: 4px;
   padding: 8px 12px;
 }

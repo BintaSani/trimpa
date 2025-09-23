@@ -1,17 +1,19 @@
-import React from 'react';
-import Image from 'next/image';
+import React from "react";
+import Image from "next/image";
+import { GoStarFill } from "react-icons/go";
+import { FiStar } from "react-icons/fi";
 
 type Props = {
-    name: string;
+  name: string;
   location: string;
   date: string;
   rating: number;
   review: string;
   imageSrc: string;
-}
+};
 
 const Testimonial = ({
-    name,
+  name,
   location,
   date,
   rating,
@@ -19,23 +21,23 @@ const Testimonial = ({
   imageSrc,
 }: Props) => {
   return (
-    <div className='p-4'>
-        {/* <div className="flex justify-center items-center space-x-3">
+    <div className="p-4">
+      {/* <div className="flex justify-center items-center space-x-3">
             <Image width={36} height={36} className="w-9 h-9 rounded-full" src="/images/avatar.png" alt="profile picture"/>
             <div className="space-y-0.5 font-medium dark:text-white text-left">
                 <div>Bonnie Green</div>
                 <div className="text-sm font-light text-gray-500 dark:text-gray-400">Developer at Open AI</div>
             </div>
         </div>     */}
-        <div className="flex items-start space-x-3">
+      <div className="flex items-start space-x-3">
         <Image
           src={imageSrc}
           alt={name}
           width={100}
           height={100}
-          sizes='100vw'
-          layout='responsive'
-          loading='lazy'
+          sizes="100vw"
+          layout="responsive"
+          loading="lazy"
           className="rounded-full mt-3"
         />
         <div>
@@ -45,30 +47,41 @@ const Testimonial = ({
           </p>
           <div className="mt-2">
             <div className="flex space-x-1">
-            {Array.from({ length: 5 }).map((_, index) => (
-                <Image
-                key={index}
-                src={index < rating ? "/images/star filled.png" : "/images/star unfilled.png"}
-                alt="star"
-                width={20}
-                height={20}
-                loading='lazy'
-                sizes='100vw'
-                layout='responsive'
-                />
-            ))}
+              {Array.from({ length: 5 }).map((_, index) => (
+                // <Image
+                //   key={index}
+                //   src={
+                //     index < rating
+                //       ? "/images/star filled.png"
+                //       : "/images/star unfilled.png"
+                //   }
+                //   alt="star"
+                //   width={20}
+                //   height={20}
+                //   loading="lazy"
+                //   sizes="100vw"
+                //   layout="responsive"
+                // />
+                <div key={index} className="">
+                  {index < rating ? (
+                    <GoStarFill className=" size-5 text-[var(--color-purple-blue)]" />
+                  ) : (
+                    <FiStar className="size-5 text-[var(--color-purple-blue)]" />
+                  )}
+                </div>
+              ))}
             </div>
-                <p className="mt-2 text-gray-900">
-                {review}{" "}
-                <span className="text-[var(--color-purple-blue)] cursor-pointer">read more...</span>
-                </p>
-            </div>
+            <p className="mt-2 text-gray-900">
+              {review}{" "}
+              <span className="text-[var(--color-purple-blue)] cursor-pointer">
+                read more...
+              </span>
+            </p>
+          </div>
         </div>
-        
       </div>
-      
     </div>
-  )
-}
+  );
+};
 
-export default Testimonial
+export default Testimonial;

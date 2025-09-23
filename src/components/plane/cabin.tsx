@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ExitRowIndicator } from "./exitrow";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { SeatRow } from "./seat";
 import { useFlightContext } from "../../../context/FlightContext";
@@ -19,22 +19,24 @@ export const Cabin = () => {
 
   useEffect(() => {
     const fetchFlight = async () => {
-      const q = query(
-        collection(db, "flights"),
-        where("flightId", "==", flightId)
-      );
-      const querySnapshot = await getDocs(q);
-      if (!querySnapshot.empty) {
-        const flightDoc = querySnapshot.docs[0].data();
+      const docRef = doc(db, "flights", flightId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const flightDoc = docSnap.data();
         setSeatData({
           seatMap: flightDoc.seatMap || {},
         });
+      } else {
+        console.warn("Flight not found");
       }
     };
-    fetchFlight();
-    const checkScreen = () => setXs(window.innerWidth < 400);
 
+    fetchFlight();
+
+    const checkScreen = () => setXs(window.innerWidth < 400);
     checkScreen(); // Initial check
+
     window.addEventListener("resize", checkScreen);
     return () => window.removeEventListener("resize", checkScreen);
   }, [flightId]);

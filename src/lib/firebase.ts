@@ -31,9 +31,9 @@ googleProvider.setCustomParameters({ prompt: "select_account" });
 
 export const SignInWithGoogle = () => {
   signInWithPopup(auth, googleProvider)
-    .then((result) => {
+    .then(async (result) => {
       const user = result.user;
-      // handle successful sign-in
+      await CreateUserProfileDocument(user);
     })
     .catch((error) => {
       console.error("Google sign-in error", error);

@@ -2,7 +2,6 @@ import React from "react";
 import { TransformedFlightOffer } from "@/components/availableFlights/flightData";
 import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import Image from "next/image";
-import { se } from "date-fns/locale";
 
 type Props = {
   selectedFlight: TransformedFlightOffer | null;
@@ -18,7 +17,7 @@ const Selectedflight = ({ selectedFlight }: Props) => {
           <div className="flex items-start justify-between">
             <div className="p-3 flex items-start gap-3">
               <Image
-                src={selectedFlight?.airlineLogo || "/flightlogo.png"}
+                src={selectedFlight?.airlineLogo || "/flightlogo.webp"}
                 alt={selectedFlight?.airline || ""}
                 width={32}
                 height={32}
@@ -48,7 +47,7 @@ const Selectedflight = ({ selectedFlight }: Props) => {
             <div className="flex border-t mt-2 pt-2 items-start justify-between">
               <div className="p-3 flex items-start gap-3">
                 <Image
-                  src={selectedFlight?.airlineLogo || "/flightlogo.png"}
+                  src={selectedFlight?.airlineLogo || "/flightlogo.webp"}
                   alt={selectedFlight?.airlineTwo || ""}
                   width={32}
                   height={32}
@@ -94,7 +93,7 @@ const Selectedflight = ({ selectedFlight }: Props) => {
           </h5>
           <h5 className="text-right text-gray-900">
             {selectedFlight?.price.currency}{" "}
-            {selectedFlight?.price.additionalServices[0].amount}
+            {selectedFlight?.price.additionalServices?.[0].amount || 0}
           </h5>
           <h5 className="text-right text-gray-900">
             {selectedFlight?.price.currency} {selectedFlight?.price.grandTotal}

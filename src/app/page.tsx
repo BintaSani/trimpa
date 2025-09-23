@@ -8,23 +8,24 @@ import Footer from "@/components/footer/footer";
 import PromoBanner from "@/components/promo-Banner/promobanner";
 import { UIProvider } from "../../context/uicontext";
 
-
 export default function Home() {
   return (
     <UIProvider>
-      <div className="">
+      <div className="overflow-x-hidden">
         <div className="h-[100vh] lg:mb-10 xl:mb-0 flex flex-col">
-          <PromoBanner/>
+          <PromoBanner />
           <Nav />
-          <Hero/>
+          <Hero />
         </div>
-        <Adventure/>
-        <Explore/>
+        <Adventure />
+        <Explore />
         <div className="flex mb-10 justify-center items-center">
-          <button className=" bg-[var(--color-purple-blue)] text-white px-5 py-2 h-full rounded-md">Explore more stays</button>
+          <button className=" bg-[var(--color-purple-blue)] text-white px-5 py-2 h-full rounded-md">
+            Explore more stays
+          </button>
         </div>
-        <Testimonials/>
-        <Footer/>
+        <Testimonials />
+        <Footer />
       </div>
     </UIProvider>
   );

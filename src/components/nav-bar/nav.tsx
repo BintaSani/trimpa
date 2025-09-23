@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { IoMenu, IoClose } from "react-icons/io5";
 import SignupModal from "../modal/signup";
+import { useAuth } from "../../../context/authContext";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,6 +13,7 @@ const Nav = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pathname = usePathname();
+  const { user, signOut } = useAuth();
 
   return (
     <div
@@ -159,7 +161,7 @@ const Nav = (props: Props) => {
             className="w-10 h-10"
           />
         )}
-        {pathname !== "/flight-summary" && (
+        {pathname !== "/flight-summary" && !user && (
           <button
             onClick={() => setIsModalOpen(true)}
             className="hover:scale-105 p-2.5 flex flex-row gap-2.5 items-center justify-start shrink-0 relative overflow-hidden"
@@ -174,13 +176,23 @@ const Nav = (props: Props) => {
             </div>
           </button>
         )}
-        {pathname !== "/flight-summary" && (
+        {pathname !== "/flight-summary" && !user && (
           <button
             onClick={() => setIsModalOpen(true)}
             className="hover:scale-105 bg-[var(--color-purple-blue)] rounded pt-3 px-5 pb-3 flex flex-row gap-2 items-center justify-start shrink-0 h-12 relative overflow-hidden"
           >
             <div className="text-[var(--color-grey-100)] text-left relative flex items-center justify-start">
               Sign up{" "}
+            </div>
+          </button>
+        )}
+        {pathname !== "/flight-summary" && user && (
+          <button
+            onClick={signOut}
+            className="hover:scale-105 bg-[var(--color-purple-blue)] rounded pt-3 px-5 pb-3 flex flex-row gap-2 items-center justify-start shrink-0 h-12 relative overflow-hidden"
+          >
+            <div className="text-[var(--color-grey-100)] text-left relative flex items-center justify-start">
+              Sign Out{" "}
             </div>
           </button>
         )}

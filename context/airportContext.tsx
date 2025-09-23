@@ -1,10 +1,11 @@
-'use client'
+"use client";
 // AirportContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type Airport = {
   name: string;
   iataCode: string;
+  country: string;
 };
 
 type AirportContextType = {
@@ -26,6 +27,7 @@ export const AirportProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAirportContext = () => {
   const context = useContext(AirportContext);
-  if (!context) throw new Error('useAirportContext must be used within an AirportProvider');
+  if (!context)
+    throw new Error("useAirportContext must be used within an AirportProvider");
   return context;
 };

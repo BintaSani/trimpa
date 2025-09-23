@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useFlightContext } from "../../../context/FlightContext";
 import { usePassengerForm } from "../../../context/passengerformContext";
 import { useFlightSearchContext } from "../../../context/flightSearchContext";
+import { formatToMonthDay } from "@/lib/utils";
 
 type Props = {};
 
@@ -15,7 +16,7 @@ const SeatSelection = (props: Props) => {
   const { outboundSeats, returnSeats, seatClass } = useSeat();
   const { selectedFlights, currentLeg, setCurrentLeg } = useFlightContext();
   const { formData } = usePassengerForm();
-  const { tripType } = useFlightSearchContext();
+  const { tripType, departureCity, arrivalCity } = useFlightSearchContext();
   const selectedSeats = [outboundSeats, returnSeats].flat();
   const router = useRouter();
 
@@ -40,24 +41,28 @@ const SeatSelection = (props: Props) => {
         <div className="bg-[#1e1f3a] px-6 py-5 flex items-center justify-between ">
           <div>
             <h4 className="text-2xl">{selectedFlights?.departure}</h4>
-            <p className="text-xs text-gray-300">California, US</p>
+            <p className="text-xs text-gray-300">
+              {departureCity?.name}, {departureCity?.country}
+            </p>
           </div>
           <GoArrowRight size={32} className="text-gray-100" />
           <div>
             <h4 className="text-2xl">{selectedFlights?.arrival}</h4>
-            <p className="text-xs text-gray-300">Tokyo, Japan</p>
+            <p className="text-xs text-gray-300">
+              {arrivalCity?.name}, {arrivalCity?.country}
+            </p>
           </div>
         </div>
         <div className="bg-indigo-500 px-6 py-5 ">
           <div className="text-base">
-            {selectedFlights?.departureDate?.split("T")[0]} |{" "}
+            {formatToMonthDay(selectedFlights?.departureDate)} |{" "}
             {selectedFlights?.departureTime || ""}
           </div>
           <div className="text-xs">Departing</div>
         </div>
         <div className="bg-[#1e1f3a] px-6 py-5 ">
           <div className="text-base">
-            {selectedFlights?.arrivalDate?.split("T")[0]} |{" "}
+            {formatToMonthDay(selectedFlights?.arrivalDate)} |{" "}
             {selectedFlights?.arrivalTime}
           </div>
           <div className="text-xs text-gray-300">Arriving</div>
@@ -71,7 +76,7 @@ const SeatSelection = (props: Props) => {
           <Image
             width={100}
             height={100}
-            src="/images/Economy Seats.png"
+            src="/images/Economy Seats.webp"
             alt="economy"
             loading="lazy"
             sizes="100vw"
@@ -112,7 +117,7 @@ const SeatSelection = (props: Props) => {
           <Image
             width={100}
             height={100}
-            src="/images/Business Seats.png"
+            src="/images/Business Seats.webp"
             alt="business"
             loading="lazy"
             sizes="100vw"
