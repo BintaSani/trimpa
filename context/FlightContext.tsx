@@ -1,5 +1,11 @@
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import type { TransformedFlightOffer } from "@/components/availableFlights/flightData";
 
 interface FlightContextType {
@@ -26,6 +32,11 @@ export const FlightProvider = ({ children }: { children: ReactNode }) => {
   const [currentLeg, setCurrentLeg] = useState<"outgoing" | "return">(
     "outgoing"
   );
+  useEffect(() => {
+    if (selectedFlights) {
+      localStorage.setItem("selectedFlight", JSON.stringify(selectedFlights));
+    }
+  }, [selectedFlights]);
 
   return (
     <FlightContext.Provider

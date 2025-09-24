@@ -41,21 +41,29 @@ export const SeatRow = ({ rowNumber, seatMap = {} }: SeatRowProps) => {
   const rightSeats = seatLabels.slice(half);
 
   const isBusinessClass = rowNumber < 6;
+  useEffect(() => {
+    if (currentLeg === "return") {
+      outboundSeats.forEach((seatName) => {
+        seatMap[seatName] = true;
+      });
+    }
+  }, [currentLeg, outboundSeats, seatMap]);
+  const handleSeatClick = (seatName: string, isBusiness: boolean) => {
+    const toggle = () =>
+      toggleSeat(seatName, isBusiness, currentLeg, totalPassengers);
+    // seatMap[seatName] = true;
+
+    if (isBusiness) {
+      showUpgradeModal(toggle);
+    } else {
+      toggle();
+    }
+  };
 
   const renderSeat = (label: string) => {
     const seatName = `${rowNumber}${label}`;
     const isSelected = selectedSeats.includes(seatName);
     const isTaken = seatMap[seatName];
-
-    const handleSeatClick = (seatName: string, isBusiness: boolean) => {
-      const toggle = () =>
-        toggleSeat(seatName, isBusiness, currentLeg, totalPassengers);
-      if (isBusiness) {
-        showUpgradeModal(toggle);
-      } else {
-        toggle();
-      }
-    };
 
     return (
       <button
@@ -72,12 +80,12 @@ export const SeatRow = ({ rowNumber, seatMap = {} }: SeatRowProps) => {
             isTaken
               ? "bg-gray-300 cursor-not-allowed"
               : isSelected
-              ? "bg-red-500 text-white"
-              : `bg-gradient-to-b ${
-                  rowNumber < 6
-                    ? "from-[#5CD6C0] to-[#22C3A6]"
-                    : "from-[#605DEC] to-[#2A26D9]"
-                } hover:bg-red-500`
+                ? "bg-red-500 text-white"
+                : `bg-gradient-to-b ${
+                    rowNumber < 6
+                      ? "from-[#5CD6C0] to-[#22C3A6]"
+                      : "from-[#605DEC] to-[#2A26D9]"
+                  } hover:bg-red-500`
           }`}
         onClick={() => {
           if (isTaken) return;

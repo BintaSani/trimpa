@@ -65,6 +65,8 @@ const PaymentForm = () => {
   const handlePaymentSuccess = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    localStorage.removeItem("selectedFlight");
+    localStorage.setItem("FlightId", flightId);
 
     const confirmationNumber = uuidv4().slice(0, 12).toUpperCase();
 
@@ -146,7 +148,7 @@ const PaymentForm = () => {
           // ..
         });
     }
-    setLoading(false);
+    // setLoading(false);
     router.push("/flight-summary");
   };
 
@@ -173,6 +175,7 @@ const PaymentForm = () => {
           <div className="flex flex-col gap-6 lg:w-[70%]">
             <input
               name="name"
+              autoComplete="name"
               onChange={handleInput}
               value={cardInfo.name}
               placeholder="Name on card"

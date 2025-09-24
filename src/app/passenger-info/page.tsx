@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "@/components/nav-bar/nav";
 import Footer from "@/components/footer/footer";
 import PassengerForm from "@/components/passenger-form/passengerForm";
@@ -20,6 +20,7 @@ const PassengerInfo = (props: Props) => {
   const { selectedFlights } = useFlightContext();
   const { isFormValid, formData, setFormData } = usePassengerForm();
   const { departureCity, arrivalCity } = useFlightSearchContext();
+  const [loading, setLoading] = useState(false);
   const logo = `https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/${selectedFlights?.airlineCode}.svg`;
   const returnLogo = `https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/${selectedFlights?.airlineCodeTwo}.svg`;
 
@@ -52,6 +53,12 @@ const PassengerInfo = (props: Props) => {
       returnDepartureTime: selectedFlights?.departureTimeTwo || "",
       returnArrivalTime: selectedFlights?.arrivalTimeTwo || "",
     },
+    terminals: {
+      departureTerminal: selectedFlights?.departureTerminal || "",
+      arrivalTerminal: selectedFlights?.arrivalTerminal || "",
+      returnDepartureTerminal: selectedFlights?.returnDepartureTerminal || "",
+      returnArrivalTerminal: selectedFlights?.returnArrivalTerminal || "",
+    },
     price: {
       totalCost: selectedFlights?.price.grandTotal || "0",
       currency: selectedFlights?.price.currency || "USD",
@@ -79,6 +86,7 @@ const PassengerInfo = (props: Props) => {
   }, []);
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       if (user) {
         await createFlight(form, user.uid);
@@ -89,6 +97,7 @@ const PassengerInfo = (props: Props) => {
     } catch (err) {
       console.error("Error creating flight:", err);
       toast.error("Failed to create flight");
+      setLoading(false);
     }
   };
 

@@ -71,10 +71,16 @@ const PassengerForm = (props: Props) => {
     e.preventDefault();
     if (bags > 0) setBags(bags - 1);
   };
+  const handleSameAsPassenger = () => {
+    localStorage.setItem("passengerInfo", JSON.stringify(formData));
+  };
 
   return (
     <div className="w-full">
-      <form className="w-full grid grid-cols-3 gap-4">
+      <form
+        onSubmit={handleSameAsPassenger}
+        className="w-full grid grid-cols-3 gap-4"
+      >
         <h4 className="text-gray-600 mt-9 mb-6 text-lg font-medium col-span-3">
           Passenger 1 (Adult)
         </h4>

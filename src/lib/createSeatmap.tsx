@@ -58,6 +58,12 @@ export interface FlightCreateSeatData {
     returnDepartureTime?: string;
     returnArrivalTime?: string;
   };
+  terminals: {
+    departureTerminal: string;
+    arrivalTerminal: string;
+    returnDepartureTerminal: string;
+    returnArrivalTerminal: string;
+  };
   price: {
     totalCost: string;
     currency: string;
@@ -109,6 +115,7 @@ export const createFlight = async (
     formData: data.formData,
     stops: data.stops,
     time: data.time,
+    terminals: data.terminals,
     price: data.price,
     additionalService: data.price.additionalServices ?? [],
     duration: data.duration,

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { GoArrowRight, GoDotFill } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
@@ -20,19 +20,31 @@ const SeatSelection = (props: Props) => {
   const selectedSeats = [outboundSeats, returnSeats].flat();
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   const handlePayment = () => {
-    router.push("/payment");
+    setLoading(true);
+    router.push("/payment"); // waits for navigation
   };
 
   const handleNextFlight = () => {
     if (tripType === "round-trip" && currentLeg === "outgoing") {
+      // handleSeatSelection();
       setCurrentLeg?.("return");
       // Clear previous selections or reset seat selection state if needed
       // For example: clear seatClass or selectedSeats if you store separately per leg
     } else {
       // If it's not a round-trip, or we're already on return leg
+      // handleSeatSelection();
+
       handlePayment();
     }
+  };
+  const handleSeatSelection = () => {
+    localStorage.setItem(
+      "selectedSeat",
+      JSON.stringify([outboundSeats, returnSeats])
+    );
   };
   return (
     <div className=" relative bg-blur backdrop-blur-md md:h-screen flex flex-col justify-between">
@@ -190,18 +202,23 @@ const SeatSelection = (props: Props) => {
           </p>
         </div>
         <div className="flex justify-between mt-2 md:mt-0 md:justify-normal md:space-x-4 w-full md:w-auto">
-          <button className="px-5 py-[13px] text-base border border-[#605DEC] text-[#605DEC] rounded">
+          <button
+            onClick={handleSeatSelection}
+            className="px-5 py-[13px] text-base border border-[#605DEC] text-[#605DEC] rounded"
+          >
             Save and close
           </button>
           <button
             onClick={handleNextFlight}
-            disabled={selectedSeats.length === 0}
+            disabled={selectedSeats.length === 0 || loading}
             type="button"
             className="px-5 py-[13px] text-base disabled:bg-gray-400/30 border-gray-400 bg-[#605DEC] text-white  disabled:text-gray-400 disabled:border-gray-400 rounded"
           >
             {tripType === "round-trip" && currentLeg === "outgoing"
               ? "Next flight"
-              : "Payment method"}
+              : loading
+                ? "Loading..."
+                : "Payment method"}
           </button>
         </div>
       </div>

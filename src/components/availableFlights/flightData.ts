@@ -42,9 +42,9 @@ export type TransformedFlightOffer = {
   arrival?: string;
   departureTwo?: string;
   arrivalTwo?: string;
-  terminal?: string;
+  departureTerminal?: string;
   arrivalTerminal?: string;
-  returnTerminal?: string;
+  returnDepartureTerminal?: string;
   returnArrivalTerminal?: string;
   flightNumber?: string;
   returnFlightNumber?: string;
@@ -88,6 +88,7 @@ function getDurationBetween(start: string, end: string): string {
 
 export function transformFlightOffers(data: any): TransformedFlightOffer[] {
   const carriersDict = data.dictionaries?.carriers || {};
+  // console.log(data);
   return data.data.map((offer: any): TransformedFlightOffer => {
     const numberOfSeatsAvailable = offer.numberOfBookableSeats;
     const itinerary = offer.itineraries[0];
@@ -166,9 +167,9 @@ export function transformFlightOffers(data: any): TransformedFlightOffer[] {
       arrivalTimeTwo: formatTime(
         segmentsTwo?.[segmentsTwo?.length - 1].arrival.at
       ),
-      terminal: firstSegment.departure.terminal,
+      departureTerminal: firstSegment.departure.terminal,
       arrivalTerminal: firstSegment.arrival.terminal,
-      returnTerminal: secondSegment?.departure.terminal,
+      returnDepartureTerminal: secondSegment?.departure.terminal,
       returnArrivalTerminal: secondSegment?.arrival.terminal,
       flightNumber: firstSegment.number,
       returnFlightNumber: secondSegment?.number,
