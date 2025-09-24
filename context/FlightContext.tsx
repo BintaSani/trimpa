@@ -7,6 +7,7 @@ import React, {
   useEffect,
 } from "react";
 import type { TransformedFlightOffer } from "@/components/availableFlights/flightData";
+import Flight from "../src/app/flights/page";
 
 interface FlightContextType {
   selectedFlights: TransformedFlightOffer | null;
@@ -15,6 +16,8 @@ interface FlightContextType {
   >;
   currentLeg: "outgoing" | "return";
   setCurrentLeg: React.Dispatch<React.SetStateAction<"outgoing" | "return">>;
+  flightId: string | null;
+  setFlightId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const FlightContext = createContext<FlightContextType | undefined>(undefined);
@@ -32,6 +35,7 @@ export const FlightProvider = ({ children }: { children: ReactNode }) => {
   const [currentLeg, setCurrentLeg] = useState<"outgoing" | "return">(
     "outgoing"
   );
+  const [flightId, setFlightId] = useState<string | null>("null");
   useEffect(() => {
     if (selectedFlights) {
       localStorage.setItem("selectedFlight", JSON.stringify(selectedFlights));
@@ -45,6 +49,8 @@ export const FlightProvider = ({ children }: { children: ReactNode }) => {
         setSelectedFlights,
         currentLeg,
         setCurrentLeg,
+        flightId,
+        setFlightId,
       }}
     >
       {children}

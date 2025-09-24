@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { FlightCreateSeatData } from "@/lib/createSeatmap";
+import { FlightCreateSeatData } from "@/types/createSeatData";
 
 interface FlightSummaryContextType {
   data: FlightCreateSeatData | null;

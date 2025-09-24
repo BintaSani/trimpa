@@ -13,13 +13,13 @@ type SeatData = {
 export const Cabin = () => {
   const [xs, setXs] = useState(false);
   const [seatData, setSeatData] = useState<SeatData | null>(null);
-  const { selectedFlights } = useFlightContext();
-  const flightId = selectedFlights?.id || "";
+  const { flightId } = useFlightContext();
+
   // console.log("Flight ID:", flightId);
 
   useEffect(() => {
     const fetchFlight = async () => {
-      const docRef = doc(db, "flights", flightId);
+      const docRef = doc(db, "flights", flightId || "");
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {

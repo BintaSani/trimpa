@@ -17,7 +17,7 @@ type Props = {};
 
 const PassengerInfo = (props: Props) => {
   const { user } = useAuth();
-  const { selectedFlights } = useFlightContext();
+  const { selectedFlights, setFlightId } = useFlightContext();
   const { isFormValid, formData, setFormData } = usePassengerForm();
   const { departureCity, arrivalCity } = useFlightSearchContext();
   const [loading, setLoading] = useState(false);
@@ -89,7 +89,8 @@ const PassengerInfo = (props: Props) => {
     setLoading(true);
     try {
       if (user) {
-        await createFlight(form, user.uid);
+        const Id = await createFlight(form, user.uid);
+        setFlightId(Id);
         router.push("/select-seat"); // ✅ only runs if createFlight succeeds
       } else {
         toast.error("User not authenticated");
@@ -124,10 +125,10 @@ const PassengerInfo = (props: Props) => {
           <div className="pr-4 mt-4 w-full flex items-center justify-end">
             <button
               onClick={handleSaveAndClose}
-              disabled={!isFormValid}
+              disabled={!isFormValid || loading}
               className="px-4 py-2 border-[#605DEC] bg-[#605DEC] text-white rounded disabled:text-gray-400 disabled:border-gray-400 disabled:bg-gray-400/30"
             >
-              Select seats
+              {loading ? "Loading..." : "Select seats"}
             </button>
           </div>
           <div className="w-full mt-[104px] ">

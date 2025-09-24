@@ -1,86 +1,9 @@
 // /utils/createFlight.ts
+
 import { db, generateSeatMap } from "./firebase";
 import { doc, setDoc } from "firebase/firestore";
-// import { AdditionalService } from "@/components/availableFlights/flightData";
-
-export type AdditionalService = {
-  type: string;
-  amount: string;
-};
-
-export interface FlightCreateSeatData {
-  flightId: string;
-  returnFlightId?: string;
-  origin: string;
-  originCity: string;
-  destinationCity?: string;
-  destination: string;
-  departureDate: string;
-  returnDate: string;
-  returnOrigin?: string;
-  returnDestination?: string;
-  returnDepartureDate?: string;
-  returnArrivalDate?: string;
-  numberOfAvailableSeats: number;
-  oneWay: boolean;
-  seatMap?: {};
-  outgoingSeats?: [];
-  returningSeats?: [];
-  outgoingClass?: string;
-  returningClass?: string;
-  confirmationNumber?: string;
-  paymentInfo?: {
-    CardName: string;
-    CardNumber: string;
-    ExpiryDate: string;
-  };
-  formData: {
-    bags: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-  stops: {
-    outboundStops: {
-      duration: string;
-      location: string;
-    }[];
-    numberOfOutboundStops: number;
-    returnStops?: {
-      duration: string;
-      location: string;
-    }[];
-    numberOfReturnStops?: number;
-  };
-  time: {
-    departureTime: string;
-    arrivalTime: string;
-    returnDepartureTime?: string;
-    returnArrivalTime?: string;
-  };
-  terminals: {
-    departureTerminal: string;
-    arrivalTerminal: string;
-    returnDepartureTerminal: string;
-    returnArrivalTerminal: string;
-  };
-  price: {
-    totalCost: string;
-    currency: string;
-    additionalServices?: AdditionalService[];
-  };
-  duration: {
-    duration: string;
-    returnDuration?: string;
-  };
-  airline: {
-    airline: string;
-    returnAirline?: string;
-    airlineCode?: string;
-    returnAirlineCode?: string;
-    airlineName?: string;
-  };
-}
+import { v4 as uuidv4 } from "uuid";
+import { FlightCreateSeatData } from "@/types/createSeatData";
 
 export const createFlight = async (
   data: FlightCreateSeatData,
@@ -92,10 +15,12 @@ export const createFlight = async (
       : 0;
   const businessSeats = data.numberOfAvailableSeats - economySeats;
   const seatMap = generateSeatMap(economySeats, businessSeats);
+  const flightId = uuidv4().slice(0, 12).toUpperCase();
+
   // console.log("seatMap", seatMap);
   // console.log("dAtA", data);
 
-  await setDoc(doc(db, "flights", data.flightId), {
+  await setDoc(doc(db, "flights", flightId), {
     flightId: data.flightId,
     returnFlightId: data.returnFlightId || "",
     origin: data.origin,
@@ -123,4 +48,5 @@ export const createFlight = async (
     createdAt: new Date().toISOString(),
     createdBy: userId,
   });
+  return flightId;
 };

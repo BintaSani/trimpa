@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
-import { FlightCreateSeatData } from "@/lib/createSeatmap";
+import { FlightCreateSeatData } from "@/types/createSeatData";
 import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import { IoCloseSharp } from "react-icons/io5";
 import { useFlightSummaryContext } from "../../../context/flightSummaryContext";

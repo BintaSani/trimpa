@@ -28,11 +28,11 @@ const PaymentForm = () => {
   const { method, setMethod, cardInfo, setCardInfo, updateField } =
     usePayment();
   const { outboundSeats, returnSeats } = useSeat();
-  const { selectedFlights } = useFlightContext();
+  const { flightId } = useFlightContext();
   // const { tripType } = useFlightSearchContext();
   const [loading, setLoading] = useState(false);
   const { formData } = usePassengerForm();
-  const flightId = selectedFlights?.id || "";
+
   const { user } = useAuth();
   const router = useRouter();
 
@@ -66,7 +66,7 @@ const PaymentForm = () => {
     e.preventDefault();
     setLoading(true);
     localStorage.removeItem("selectedFlight");
-    localStorage.setItem("FlightId", flightId);
+    localStorage.setItem("FlightId", flightId || "");
 
     const confirmationNumber = uuidv4().slice(0, 12).toUpperCase();
 
@@ -117,7 +117,7 @@ const PaymentForm = () => {
       : (outgoingClass = "Economy");
 
     // Update outbound flight seat map
-    await updateDoc(doc(db, "flights", flightId), {
+    await updateDoc(doc(db, "flights", flightId || ""), {
       ...outboundSeatMapUpdate,
       ...returnSeatMapUpdate,
       outgoingSeats: outboundSeats,
