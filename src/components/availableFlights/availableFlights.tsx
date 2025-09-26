@@ -13,6 +13,8 @@ const FlightTable = ({ onFlightSelect }: FlightListProps) => {
   const { flightData } = useFlightSearchContext();
   if (!flightData) {
     return <div className="animate-pulse">Loading flights...</div>;
+  } else if (flightData.length === 0) {
+    return <div>No flights available</div>;
   }
 
   const transformedData: TransformedFlightOffer[] =
