@@ -47,7 +47,7 @@ const Nav = (props: Props) => {
         <div className="absolute top-12 left-0 w-full bg-white shadow-lg rounded-md flex flex-col gap-2 text-[var(--color-grey-400)] font-[var(--font-sans)] text-base p-4 z-100">
           <Link
             href="/flights"
-            className={`p-2.5 hover:bg-[var(--color-purple-blue)] hover:text-white ${
+            className={`p-2.5 text-center hover:bg-[var(--color-purple-blue)] hover:text-white ${
               pathname === "/flights" ? "text-[var(--color-purple-blue)]" : ""
             }`}
             onClick={() => setIsOpen(false)}
@@ -56,7 +56,7 @@ const Nav = (props: Props) => {
           </Link>
           <Link
             href="/hotels"
-            className={`p-2.5 hover:bg-[var(--color-purple-blue)] hover:text-white ${
+            className={`p-2.5 text-center hover:bg-[var(--color-purple-blue)] hover:text-white ${
               pathname === "/hotels" ? "text-[var(--color-purple-blue)]" : ""
             }`}
             onClick={() => setIsOpen(false)}
@@ -65,33 +65,59 @@ const Nav = (props: Props) => {
           </Link>
           <Link
             href="/packages"
-            className={`p-2.5 hover:bg-[var(--color-purple-blue)] hover:text-white ${
+            className={`p-2.5 text-center hover:bg-[var(--color-purple-blue)] hover:text-white ${
               pathname === "/packages" ? "text-[var(--color-purple-blue)]" : ""
             }`}
             onClick={() => setIsOpen(false)}
           >
             Packages
           </Link>
-          <button
-            onClick={() => {
-              setIsModalOpen(true);
-              setIsOpen(false);
-            }}
-            className={`p-2.5 hover:bg-[var(--color-purple-blue)] hover:text-white ${
-              pathname === "/signIn" ? "text-[var(--color-purple-blue)]" : ""
-            }`}
-          >
-            Sign in
-          </button>
-          <button
-            onClick={() => {
-              setIsModalOpen(true);
-              setIsOpen(false);
-            }}
-            className="bg-[var(--color-purple-blue)] text-white rounded p-3 text-center"
-          >
-            Sign up
-          </button>
+          {pathname === "/flight-summary" && (
+            <Link
+              href="/my-trips"
+              className="hover:scale-105 p-2.5 text-center flex flex-row gap-2.5 items-center justify-start shrink-0 relative overflow-hidden"
+            >
+              <div
+                className={`
+           text-center relative  flex items-center justify-center`}
+              >
+                My Trips{" "}
+              </div>
+            </Link>
+          )}
+
+          {!user && (
+            <button
+              onClick={() => {
+                setIsModalOpen(true);
+                setIsOpen(false);
+              }}
+              className={`p-2.5 hover:bg-[var(--color-purple-blue)] hover:text-white ${
+                pathname === "/signIn" ? "text-[var(--color-purple-blue)]" : ""
+              }`}
+            >
+              Sign in
+            </button>
+          )}
+          {!user && (
+            <button
+              onClick={() => {
+                setIsModalOpen(true);
+                setIsOpen(false);
+              }}
+              className="bg-[var(--color-purple-blue)] text-white rounded p-3 text-center"
+            >
+              Sign up
+            </button>
+          )}
+          {pathname !== "/flight-summary" && user && (
+            <button
+              onClick={signOut}
+              className="bg-[var(--color-purple-blue)] text-white rounded p-3 text-center"
+            >
+              Sign Out{" "}
+            </button>
+          )}
         </div>
       )}
 
