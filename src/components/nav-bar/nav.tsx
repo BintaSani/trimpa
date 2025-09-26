@@ -17,7 +17,7 @@ const Nav = (props: Props) => {
 
   return (
     <div
-      className="bg-[var(--color-true-white)] z-100 w-full pt-2 px-6 pb-2  flex flex-row items-center justify-between sticky max-w-[1440px] mx-auto"
+      className="bg-[var(--color-true-white)] z-100 w-full pt-2 px-6 pb-2  flex flex-row items-center justify-between max-w-[1440px] mx-auto"
       // className
     >
       <Link href="/">

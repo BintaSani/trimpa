@@ -100,7 +100,7 @@ const FlightSummaryComponent = () => {
           class: data?.returningClass || "Economy",
         },
         currency: data?.price.currency || "USD",
-        price: amountPaid || 0,
+        price: parseFloat(amountPaid.toFixed(2)) || 0,
         bookingReference: data?.confirmationNumber || "N/A",
         qrData: qrCodeUrl,
         status: "confirmed", // or map from your API if available
