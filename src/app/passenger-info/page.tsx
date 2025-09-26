@@ -5,6 +5,7 @@ import Footer from "@/components/footer/footer";
 import PassengerForm from "@/components/passenger-form/passengerForm";
 import { useFlightContext } from "../../../context/FlightContext";
 import { usePassengerForm } from "../../../context/passengerformContext";
+import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import Selectedflight from "@/components/selectedFlight/selectedflight";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -18,6 +19,7 @@ const PassengerInfo = (props: Props) => {
   const { user } = useAuth();
   const { selectedFlights, setFlightId } = useFlightContext();
   const { isFormValid, formData, setFormData } = usePassengerForm();
+  const { tripType } = useFlightSearchContext();
   const [loading, setLoading] = useState(false);
   const logo = `https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/${selectedFlights?.airlineCode}.svg`;
   const returnLogo = `https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/${selectedFlights?.airlineCodeTwo}.svg`;
@@ -35,7 +37,7 @@ const PassengerInfo = (props: Props) => {
     returnArrivalDate: selectedFlights?.returnArrivalDate || "",
     arrivalDate: selectedFlights?.arrivalDate || "",
     numberOfAvailableSeats: selectedFlights?.numberOfSeatsAvailable || 0,
-    oneWay: selectedFlights?.isOneWay || false,
+    oneWay: tripType === "round-trip" ? false : true,
     formData: formData || {},
     location: {
       originCity: selectedFlights?.departureCity || "",
