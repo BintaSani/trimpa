@@ -65,7 +65,7 @@ const PaymentForm = () => {
   const handlePaymentSuccess = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    localStorage.removeItem("selectedFlight");
+
     localStorage.setItem("FlightId", flightId || "");
 
     const confirmationNumber = uuidv4().slice(0, 12).toUpperCase();

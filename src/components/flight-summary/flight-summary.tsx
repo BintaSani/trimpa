@@ -7,85 +7,137 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useFlightSummaryContext } from "../../../context/flightSummaryContext";
 import { FlightCard, PaymentMethod, PriceBreakdown } from "./small-components";
 import { toast } from "react-toastify";
-import FlightTicket from "@/components/flight-summary/ticketGenerator";
-// import { useAuth } from "../../../context/authContext";
-import { toPng } from "html-to-image";
+import { FlightTicket } from "@/types/ticket";
+import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
-import Link from "next/link";
+import { formatDate } from "@/lib/utils";
+import QRCode from "qrcode";
+import { generateTicketPDF } from "@/lib/pdfGenerator";
 
 const FlightSummaryComponent = () => {
   const [show, setShow] = useState(true);
-
   const { tripType } = useFlightSearchContext();
   const { data, setData } = useFlightSummaryContext();
+  const router = useRouter();
+  const additionalServicesAmount =
+    data?.price?.additionalServices?.[0]?.amount ?? "0";
+  const sendEmail = async () => {
+    if (!data) {
+      toast.error("No ticket data available");
+      return;
+    }
+    const qr = `Booking Reference: ${data?.confirmationNumber || ""}`;
+    const qrCodeUrl = await QRCode.toDataURL(qr);
+    const bags = data?.formData?.bags || 0;
+    const seatClassOut =
+      data?.outgoingClass === "Business" ? "Business" : "Economy";
 
-  // const ticketRef = useRef<HTMLDivElement>(null);
+    const Price = Number(data?.price.totalCost);
 
-  // const {user} = useAuth();
+    const seatClassReturn =
+      data?.returningClass === "Business" ? "Business" : "Economy";
 
-  // const sendEmail = async () => {
-  //   if (!ticketRef.current) return;
+    const AdditionalServices = additionalServicesAmount;
+    const bag = bags > 1 ? Number(AdditionalServices) * (bags - 1) : 0;
+    const business = seatClassOut === "Business" ? 199 : 0;
+    const businessReturn = seatClassReturn === "Business" ? 199 : 0;
+    const subtotal = Price + bag + business + businessReturn;
 
-  //   try {
-  //     const imageData = await toPng(ticketRef.current); // returns base64 image
+    const taxes = subtotal * 0.094; // 9.4% tax
 
-  //     // Upload image to Cloudinary
-  //     const uploadRes = await fetch("/api/upload-to-cloudinary", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ imageData }),
-  //     });
+    const amountPaid = subtotal + taxes;
+    try {
+      // Prepare ticket data
+      const ticketData: FlightTicket = {
+        id: `${data?.airline?.airlineName || ""}${data?.flightId || ""}-${data?.departureDate || ""}-${data?.formData?.firstName || ""}`,
+        passengerName:
+          `${data?.formData?.firstName || ""} ${data?.formData?.lastName || ""}`.trim(),
+        email: data?.formData?.email || "default@email.com",
+        flightNumber: `${data?.flightId || ""}`,
+        airlineName: data?.airline?.airline || "",
+        airline: data?.airline?.airlineName || "",
+        departure: {
+          airport: data?.location.originAirport || "",
+          city: data?.location.originCity || "",
+          code: data?.origin || "",
+          date: data?.departureDate || "",
+          time: data?.time?.departureTime || "",
+        },
+        arrival: {
+          airport: data?.location.destinationAirport || "",
+          city: data?.location.destinationCity || "",
+          code: data?.destination || "",
+          date: data?.arrivalDate || "", // fallback if no arrivalDate
+          time: data?.time?.arrivalTime || "",
+        },
+        seat: Array.isArray(data?.outgoingSeats)
+          ? data.outgoingSeats.join(", ")
+          : data?.outgoingSeats || "N/A",
+        gate: data?.terminals.departureTerminal || "N/A",
+        class: data?.outgoingClass || "Economy",
+        return: {
+          flightNumber: `${data?.returnFlightId || ""}`,
+          airlineName: data?.airline?.returnAirline || "",
+          airline: data?.airline?.airlineNameTwo || "",
+          departure: {
+            airport: data?.location.returnOriginAirport || "",
+            city: data?.location.returnOriginCity || "",
+            code: data?.returnOrigin || "",
+            date: data?.returnDepartureDate || "",
+            time: data?.time?.returnDepartureTime || "",
+          },
+          arrival: {
+            airport: data?.location.returnDestinationAirport || "",
+            city: data?.location.returnDestinationCity || "",
+            code: data?.returnDestination || "",
+            date: data?.returnArrivalDate || "", // fallback if no arrivalDate
+            time: data?.time?.returnArrivalTime || "",
+          },
+          seat: Array.isArray(data?.returningSeats)
+            ? data.returningSeats.join(", ")
+            : data?.returningSeats || "N/A",
+          gate: data?.terminals.returnDepartureTerminal || "N/A",
+          class: data?.returningClass || "Economy",
+        },
+        currency: data?.price.currency || "USD",
+        price: amountPaid || 0,
+        bookingReference: data?.confirmationNumber || "N/A",
+        qrData: qrCodeUrl,
+        status: "confirmed", // or map from your API if available
+        createdAt: new Date(),
+      };
 
-  //     const { imageUrl, error } = await uploadRes.json();
+      // Generate PDF
+      const pdfDataUri = generateTicketPDF(ticketData);
+      const pdfBase64 = pdfDataUri.split(",")[1];
 
-  //     if (!uploadRes.ok || error || !imageUrl) {
-  //       throw new Error("Failed to upload image");
-  //     }
+      // Send email with PDF attachment
+      const res = await fetch("/api/send-ticket", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to_email: ticketData.email,
+          to_name: ticketData.passengerName,
+          pdfBase64: pdfBase64,
+          ticketData: ticketData,
+        }),
+      });
 
-  //     // Send email with hosted image URL
-  //     const res = await fetch("/api/send-ticket", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         to_email: data?.formData?.email || "default@email.com",
-  //         to_name: data?.formData?.firstName || "John",
-  //         imageUrl,
-  //       }),
-  //     });
+      const result = await res.json();
 
-  //     const result = await res.json();
-
-  //     if (res.ok) toast.success("Ticket sent!");
-  //     else {
-  //       console.error(result.error);
-  //       toast.error("Failed to send ticket.");
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast.error("Could not send the ticket.");
-  //   }
-  // };
-
-  // const passenger = {
-  //   name: data?.formData.firstName + " " + data?.formData?.lastName,
-  // };
-  // const flight = {
-  //   number: (data?.airline?.airlineName ?? "") + (data?.flightId ?? ""),
-  //   from: data?.originCity ?? "",
-  //   to: data?.destinationCity ?? "",
-  //   date: data?.departureDate ?? "",
-  //   id:
-  //     (data?.airline?.airlineName ?? "") +
-  //     (data?.flightId ?? "") +
-  //     "-" +
-  //     (data?.departureDate ?? "") +
-  //     (data?.formData.firstName ?? ""),
-  //   seat: Array.isArray(data?.outgoingSeats)
-  //     ? data?.outgoingSeats.join(", ")
-  //     : (data?.outgoingSeats ?? ""),
-  //   airline: data?.airline?.airline ?? "",
-  //   time: data?.time.departureTime ?? "",
-  // };
+      if (res.ok) {
+        toast.success("Ticket sent successfully!");
+        router.push("/");
+        localStorage.clear();
+      } else {
+        console.error(result.error);
+        toast.error("Failed to send ticket.");
+      }
+    } catch (err) {
+      console.error("Error sending ticket:", err);
+      toast.error("Could not send the ticket.");
+    }
+  };
 
   useEffect(() => {
     const flightId = localStorage.getItem("FlightId") || "";
@@ -96,36 +148,25 @@ const FlightSummaryComponent = () => {
       if (docSnap.exists()) {
         const flightDoc = docSnap.data();
         setData(flightDoc as FlightCreateSeatData);
-        // sendEmail();
       } else {
         console.warn("Flight not found");
       }
     };
 
     if (flightId) fetchFlight();
-    setTimeout(() => {
-      setShow(false);
-    }, 2000);
-  }, []);
+    const timer = setTimeout(() => setShow(false), 2000);
+    return () => clearTimeout(timer);
+  }, [setData]);
+  useEffect(() => {
+    if (data) {
+      const timer = setTimeout(() => {
+        sendEmail();
+      }, 10000); // delay in milliseconds (2000ms = 2 seconds)
 
-  const hasSentRef = useRef<string | null>(null); // Track the last sent flight ID
-
-  // useEffect(() => {
-  //   if (
-  //     data &&
-  //     ticketRef.current &&
-  //     data.flightId &&
-  //     hasSentRef.current !== data.flightId // Only send once per flight ID
-  //   ) {
-  //     hasSentRef.current = data.flightId; // Set immediately to block others
-
-  //     const timeout = setTimeout(() => {
-  //       sendEmail();
-  //     }, 300);
-
-  //     return () => clearTimeout(timeout);
-  //   }
-  // }, [data]);
+      // Cleanup function to clear timeout if data changes or component unmounts
+      return () => clearTimeout(timer);
+    }
+  }, [data]);
 
   return (
     <div className=" text-gray-600">
@@ -155,7 +196,9 @@ const FlightSummaryComponent = () => {
       <h3 className="text-2xl font-semibold mb-4">Flight summary</h3>
 
       <div className="mb-14">
-        <h4 className="text-lg font-medium">Departing February 25th, 2021</h4>
+        <h4 className="text-lg font-medium">
+          Departing {formatDate(data?.departureDate || "")}
+        </h4>
         <FlightCard
           seat={data?.outgoingSeats}
           seatClass={data?.outgoingClass || "economy"}
@@ -180,7 +223,9 @@ const FlightSummaryComponent = () => {
 
       {tripType === "round-trip" && (
         <div className="mb-14">
-          <h4 className="text-lg font-medium">Arriving March 21st, 2021</h4>
+          <h4 className="text-lg font-medium">
+            Arriving {formatDate(data?.returnDepartureDate || "")}
+          </h4>
           <FlightCard
             seat={data?.returningSeats}
             seatClass={data?.returningClass || "economy"}
@@ -218,14 +263,13 @@ const FlightSummaryComponent = () => {
         }
         currency={data?.price.currency}
         bags={data?.formData?.bags || 0}
-        seatClass={
-          data?.outgoingClass === "Business"
-            ? "Business"
-            : data?.returningClass === "Business"
-              ? "Business"
-              : "Economy"
+        seatClassOut={
+          data?.outgoingClass === "Business" ? "Business" : "Economy"
         }
-        // AdditionalServices={data?.price.additionalServices?.[0].amount || "0"}
+        seatClassReturn={
+          data?.returningClass === "Business" ? "Business" : "Economy"
+        }
+        AdditionalServices={additionalServicesAmount}
       />
 
       <h4 className="text-2xl font-semibold mt-8 mb-6">Payment method</h4>

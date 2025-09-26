@@ -54,14 +54,15 @@ const SeatSelection = (props: Props) => {
           <div>
             <h4 className="text-2xl">{selectedFlights?.departure}</h4>
             <p className="text-xs text-gray-300">
-              {departureCity?.name}, {departureCity?.country}
+              {selectedFlights?.departureCity},{" "}
+              {selectedFlights?.departureCountry}
             </p>
           </div>
           <GoArrowRight size={32} className="text-gray-100" />
           <div>
             <h4 className="text-2xl">{selectedFlights?.arrival}</h4>
             <p className="text-xs text-gray-300">
-              {arrivalCity?.name}, {arrivalCity?.country}
+              {selectedFlights?.arrivalCity}, {selectedFlights?.arrivalCountry}
             </p>
           </div>
         </div>

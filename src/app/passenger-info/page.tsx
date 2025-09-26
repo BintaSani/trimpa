@@ -5,7 +5,6 @@ import Footer from "@/components/footer/footer";
 import PassengerForm from "@/components/passenger-form/passengerForm";
 import { useFlightContext } from "../../../context/FlightContext";
 import { usePassengerForm } from "../../../context/passengerformContext";
-import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import Selectedflight from "@/components/selectedFlight/selectedflight";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,7 +18,6 @@ const PassengerInfo = (props: Props) => {
   const { user } = useAuth();
   const { selectedFlights, setFlightId } = useFlightContext();
   const { isFormValid, formData, setFormData } = usePassengerForm();
-  const { departureCity, arrivalCity } = useFlightSearchContext();
   const [loading, setLoading] = useState(false);
   const logo = `https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/${selectedFlights?.airlineCode}.svg`;
   const returnLogo = `https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/${selectedFlights?.airlineCodeTwo}.svg`;
@@ -35,12 +33,22 @@ const PassengerInfo = (props: Props) => {
     departureDate: selectedFlights?.departureDate || "",
     returnDepartureDate: selectedFlights?.returnDepartureDate || "",
     returnArrivalDate: selectedFlights?.returnArrivalDate || "",
-    returnDate: selectedFlights?.arrivalDate || "",
+    arrivalDate: selectedFlights?.arrivalDate || "",
     numberOfAvailableSeats: selectedFlights?.numberOfSeatsAvailable || 0,
     oneWay: selectedFlights?.isOneWay || false,
     formData: formData || {},
-    originCity: departureCity?.name || "",
-    destinationCity: arrivalCity?.name || "",
+    location: {
+      originCity: selectedFlights?.departureCity || "",
+      destinationCity: selectedFlights?.arrivalCity || "",
+      returnOriginCity: selectedFlights?.returnDepartureCity || "",
+      returnDestinationCity: selectedFlights?.returnArrivalCity || "",
+      originAirport: selectedFlights?.departureAirport || "",
+      destinationAirport: selectedFlights?.arrivalAirport || "",
+      returnOriginAirport: selectedFlights?.returnDepartureAirport || "",
+      returnDestinationAirport: selectedFlights?.returnArrivalAirport || "",
+      originCountry: selectedFlights?.departureCountry || "",
+      destinationCountry: selectedFlights?.arrivalCountry || "",
+    },
     stops: {
       outboundStops: selectedFlights?.stops || [],
       numberOfOutboundStops: selectedFlights?.numberOfStops || 0,
@@ -74,6 +82,7 @@ const PassengerInfo = (props: Props) => {
       airlineCode: logo || "",
       returnAirlineCode: returnLogo || "",
       airlineName: selectedFlights?.airlineCode || "",
+      airlineNameTwo: selectedFlights?.airlineCodeTwo || "",
     },
   };
 

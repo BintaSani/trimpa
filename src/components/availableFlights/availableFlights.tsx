@@ -1,7 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import { useFlightSearchContext } from "../../../context/flightSearchContext";
-import { transformFlightOffers, TransformedFlightOffer } from "./flightData";
+import { transformFlightOffers } from "./flightData";
+import { TransformedFlightOffer } from "../../types/selectedFlisghtData";
 
 interface FlightListProps {
   // flights: Flight[];

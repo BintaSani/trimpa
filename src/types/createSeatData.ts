@@ -7,11 +7,9 @@ export interface FlightCreateSeatData {
   flightId: string;
   returnFlightId?: string;
   origin: string;
-  originCity: string;
-  destinationCity?: string;
   destination: string;
   departureDate: string;
-  returnDate: string;
+  arrivalDate: string;
   returnOrigin?: string;
   returnDestination?: string;
   returnDepartureDate?: string;
@@ -24,6 +22,18 @@ export interface FlightCreateSeatData {
   outgoingClass?: string;
   returningClass?: string;
   confirmationNumber?: string;
+  location: {
+    originCity: string;
+    destinationCity: string;
+    returnOriginCity: string;
+    returnDestinationCity: string;
+    originAirport: string;
+    destinationAirport: string;
+    returnOriginAirport: string;
+    returnDestinationAirport: string;
+    originCountry: string;
+    destinationCountry: string;
+  };
   paymentInfo?: {
     CardName: string;
     CardNumber: string;
@@ -74,5 +84,6 @@ export interface FlightCreateSeatData {
     airlineCode?: string;
     returnAirlineCode?: string;
     airlineName?: string;
+    airlineNameTwo?: string;
   };
 }

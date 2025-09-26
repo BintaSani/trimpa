@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import FlightSearch from "@/components/form/form";
 import Nav from "@/components/nav-bar/nav";
 import Dropdown from "@/components/dropdown/dropdown";
 import FlightList from "@/components/availableFlights/availableFlights";
 import { useFlightSearchContext } from "../../../context/flightSearchContext";
-import type { TransformedFlightOffer } from "@/components/availableFlights/flightData";
+import type { TransformedFlightOffer } from "@/types/selectedFlisghtData";
 import { useFlightContext } from "../../../context/FlightContext";
 import PriceGrid from "@/components/price-grid/price-grid";
 import PriceHistory from "@/components/price-history/priceHistory";
@@ -14,14 +14,16 @@ import Places from "@/components/placesToStay/placesToStay";
 import Suggestions from "@/components/suggestions/suggestions";
 import Footer from "@/components/footer/footer";
 import { useRouter } from "next/navigation";
+import { TokenContext } from "../../../context/tokenContext";
 
 type Props = {};
 
 const Flight = (props: Props) => {
   const router = useRouter();
-  // State to store the selected flight
+  const { token } = useContext(TokenContext);
   const { selectedFlights, setSelectedFlights } = useFlightContext();
   const { from, to } = useFlightSearchContext();
+  const [loading, setLoading] = useState(false);
 
   // Function to handle when a row is clicked
   const handleFlightSelect = (flight: TransformedFlightOffer) => {
@@ -45,12 +47,65 @@ const Flight = (props: Props) => {
   //   }
   // }, [selectedFlights]);
 
-  const handleSaveAndClose = () => {
-    if (selectedFlights) {
-      localStorage.setItem("selectedFlight", JSON.stringify(selectedFlights));
-    } //  else {
-    //   localStorage.removeItem("selectedFlight");
-    // }
+  const handleSaveAndClose = async () => {
+    if (!selectedFlights || !token) return;
+    setLoading(true);
+
+    // 🔑 helper to fetch airport info
+    const fetchAirportByIata = async (code: string) => {
+      try {
+        const res = await fetch(
+          `https://test.api.amadeus.com/v1/reference-data/locations?subType=AIRPORT&keyword=${code}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (!res.ok) return null;
+        const { data } = await res.json();
+        console.log(data);
+        return {
+          name: data[0].name,
+          city: data[0].address?.cityName,
+          country: data[0].address?.countryName,
+        };
+      } catch {
+        return null;
+      }
+    };
+
+    // 🔑 call API only for selected flight’s codes
+    const [depAirport, arrAirport, retDepAirport, retArrAirport] =
+      await Promise.all([
+        fetchAirportByIata(selectedFlights.departure || ""),
+        fetchAirportByIata(selectedFlights.arrival || ""),
+        selectedFlights.departureTwo
+          ? fetchAirportByIata(selectedFlights.departureTwo)
+          : null,
+        selectedFlights.arrivalTwo
+          ? fetchAirportByIata(selectedFlights.arrivalTwo)
+          : null,
+      ]);
+
+    // 🔑 enrich flight object with names + cities
+    const enrichedFlight = {
+      ...selectedFlights,
+      departureCity: depAirport?.city,
+      arrivalCity: arrAirport?.city,
+      returnDepartureCity: retDepAirport?.city,
+      returnArrivalCity: retArrAirport?.city,
+      departureAirport: depAirport?.name,
+      arrivalAirport: arrAirport?.name,
+      returnDepartureAirport: retDepAirport?.name,
+      returnArrivalAirport: retArrAirport?.name,
+      departureCountry: depAirport?.country,
+      arrivalCountry: arrAirport?.country,
+    };
+
+    // save enriched flight
+    localStorage.setItem("selectedFlight", JSON.stringify(enrichedFlight));
+    setSelectedFlights(enrichedFlight);
+
+    setLoading(false);
     router.push("/passenger-info");
   };
 
@@ -97,8 +152,9 @@ const Flight = (props: Props) => {
                   <button
                     onClick={handleSaveAndClose}
                     className="px-4 py-2 self-end border ml-auto border-[#605DEC] bg-transparent hover:bg-[#605DEC] text-[#605DEC] rounded hover:scale-105 hover:text-white"
+                    disabled={loading}
                   >
-                    Save and close
+                    {loading ? "Loading..." : "Save and close"}
                   </button>
                 </div>
               </>

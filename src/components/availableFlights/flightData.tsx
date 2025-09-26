@@ -1,93 +1,12 @@
-export type StopInfo = {
-  duration: string;
-  location: string;
-};
-
-export type AdditionalService = {
-  type: string;
-  amount: string;
-};
-export type Price = {
-  additionalServices: AdditionalService[];
-  base: string;
-  currency: string;
-  total: string;
-  grandTotal: string;
-  fees: {
-    amount: string;
-    type: string;
-  };
-};
-
-export type TransformedFlightOffer = {
-  id?: string;
-  returnId?: string;
-  numberOfSeatsAvailable?: number;
-  duration: string;
-  durationTwo?: string;
-  airline: string;
-  airlineTwo?: string;
-  airlineCode?: string;
-  airlineCodeTwo?: string;
-  returnAirlineCode?: string;
-  departureTime: string;
-  arrivalTime: string;
-  departureTimeTwo?: string;
-  arrivalTimeTwo?: string;
-  departureDate?: string;
-  returnDepartureDate?: string;
-  returnArrivalDate?: string;
-  arrivalDate?: string;
-  departure?: string;
-  arrival?: string;
-  departureTwo?: string;
-  arrivalTwo?: string;
-  departureTerminal?: string;
-  arrivalTerminal?: string;
-  returnDepartureTerminal?: string;
-  returnArrivalTerminal?: string;
-  flightNumber?: string;
-  returnFlightNumber?: string;
-  numberOfStops: number;
-  numberOfStopsTwo?: number;
-  outgoingSeats?: [];
-  returningSeats?: [];
-  stops: StopInfo[];
-  stopsTwo?: StopInfo[];
-  price: Price;
-  isOneWay: boolean;
-  additionalServices: AdditionalService[];
-  airlineLogo: string;
-};
-
-function formatTime(iso: string): string {
-  const date = new Date(iso);
-  return date.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-}
-
-function formatDuration(isoDuration: string): string {
-  if (!isoDuration) return "";
-  return isoDuration
-    .replace("PT", "")
-    .replace("H", "h ")
-    .replace("M", "m")
-    .trim();
-}
-
-function getDurationBetween(start: string, end: string): string {
-  const diffMs = new Date(end).getTime() - new Date(start).getTime();
-  const minutes = Math.floor(diffMs / 60000);
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  return `${hours}h ${remainingMinutes}m`;
-}
-
+import { getDurationBetween, formatTime, formatDuration } from "@/lib/utils";
+import {
+  TransformedFlightOffer,
+  StopInfo,
+  AdditionalService,
+} from "@/types/selectedFlisghtData";
 export function transformFlightOffers(data: any): TransformedFlightOffer[] {
   const carriersDict = data.dictionaries?.carriers || {};
+
   // console.log(data);
   return data.data.map((offer: any): TransformedFlightOffer => {
     const numberOfSeatsAvailable = offer.numberOfBookableSeats;

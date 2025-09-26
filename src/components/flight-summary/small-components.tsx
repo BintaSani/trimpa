@@ -84,19 +84,22 @@ export const PriceBreakdown = ({
   returnPrice,
   currency,
   bags,
-  seatClass,
+  seatClassOut,
+  seatClassReturn,
   AdditionalServices,
 }: {
   departure: number;
   returnPrice: number;
   currency: string | undefined;
   bags: number;
-  seatClass: string;
+  seatClassOut: string;
+  seatClassReturn: string;
   AdditionalServices?: string | undefined;
 }) => {
-  const bag = bags > 1 ? 20 * (bags - 1) : 0;
-  const business = seatClass === "Business" ? 199 : 0;
-  const subtotal = departure + returnPrice + bag + business;
+  const bag = bags > 1 ? Number(AdditionalServices) * (bags - 1) : 0;
+  const business = seatClassOut === "Business" ? 199 : 0;
+  const businessReturn = seatClassReturn === "Business" ? 199 : 0;
+  const subtotal = departure + returnPrice + bag + business + businessReturn;
 
   const taxes = subtotal * 0.094; // 9.4% tax
   const total = subtotal + taxes;

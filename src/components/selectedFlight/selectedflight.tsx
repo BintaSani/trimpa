@@ -1,5 +1,5 @@
 import React from "react";
-import { TransformedFlightOffer } from "@/components/availableFlights/flightData";
+import { TransformedFlightOffer } from "@/types/selectedFlisghtData";
 import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import Image from "next/image";
 

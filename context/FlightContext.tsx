@@ -6,8 +6,8 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import type { TransformedFlightOffer } from "@/components/availableFlights/flightData";
 import Flight from "../src/app/flights/page";
+import { TransformedFlightOffer } from "@/types/selectedFlisghtData";
 
 interface FlightContextType {
   selectedFlights: TransformedFlightOffer | null;
