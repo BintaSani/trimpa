@@ -124,7 +124,7 @@ export function generateTicketPDF(ticket: FlightTicket): string {
   cursorY += 70; // move below boxes
   checkPageBreak();
   // Return flight section
-  if (ticket.return) {
+  if (ticket.oneWay === false && ticket.return) {
     pdf.setTextColor(0, 0, 0);
     pdf.setFontSize(14);
     pdf.setFont("helvetica", "bold");

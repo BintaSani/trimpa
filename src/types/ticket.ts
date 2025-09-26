@@ -22,6 +22,7 @@ export interface FlightTicket {
   seat: string;
   gate: string;
   class: string;
+  oneWay: boolean;
   return?: {
     flightNumber: string;
     airlineName: string;

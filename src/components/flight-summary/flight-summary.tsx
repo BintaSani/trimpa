@@ -75,6 +75,7 @@ const FlightSummaryComponent = () => {
           : data?.outgoingSeats || "N/A",
         gate: data?.terminals.departureTerminal || "N/A",
         class: data?.outgoingClass || "Economy",
+        oneWay: data?.oneWay || false,
         return: {
           flightNumber: `${data?.returnFlightId || ""}`,
           airlineName: data?.airline?.returnAirline || "",
@@ -224,7 +225,7 @@ const FlightSummaryComponent = () => {
       {tripType === "round-trip" && (
         <div className="mb-14">
           <h4 className="text-lg font-medium">
-            Arriving {formatDate(data?.returnDepartureDate || "")}
+            Returning {formatDate(data?.returnDepartureDate || "")}
           </h4>
           <FlightCard
             seat={data?.returningSeats}
