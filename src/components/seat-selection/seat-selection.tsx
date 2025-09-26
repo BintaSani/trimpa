@@ -16,7 +16,7 @@ const SeatSelection = (props: Props) => {
   const { outboundSeats, returnSeats, seatClass } = useSeat();
   const { selectedFlights, currentLeg, setCurrentLeg } = useFlightContext();
   const { formData } = usePassengerForm();
-  const { tripType, departureCity, arrivalCity } = useFlightSearchContext();
+  const { tripType } = useFlightSearchContext();
   const selectedSeats = [outboundSeats, returnSeats].flat();
   const router = useRouter();
 

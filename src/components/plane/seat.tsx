@@ -9,9 +9,14 @@ import { useFlightContext } from "../../../context/FlightContext";
 interface SeatRowProps {
   rowNumber: number;
   seatMap?: Record<string, boolean>;
+  setSeatMap: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
 }
 
-export const SeatRow = ({ rowNumber, seatMap = {} }: SeatRowProps) => {
+export const SeatRow = ({
+  rowNumber,
+  seatMap = {},
+  setSeatMap,
+}: SeatRowProps) => {
   const { outboundSeats, returnSeats, toggleSeat } = useSeat();
   const { currentLeg } = useFlightContext();
   const { adults, minors } = useFlightSearchContext();
@@ -43,11 +48,16 @@ export const SeatRow = ({ rowNumber, seatMap = {} }: SeatRowProps) => {
   const isBusinessClass = rowNumber < 6;
   useEffect(() => {
     if (currentLeg === "return") {
-      outboundSeats.forEach((seatName) => {
-        seatMap[seatName] = true;
+      setSeatMap((prev) => {
+        const updated = { ...prev };
+        outboundSeats.forEach((seatName) => {
+          updated[seatName] = true;
+        });
+        return updated;
       });
     }
-  }, [currentLeg, outboundSeats, seatMap]);
+  }, [currentLeg, outboundSeats, setSeatMap]);
+
   const handleSeatClick = (seatName: string, isBusiness: boolean) => {
     const toggle = () =>
       toggleSeat(seatName, isBusiness, currentLeg, totalPassengers);

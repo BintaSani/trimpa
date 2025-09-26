@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import FlightSearch from "@/components/form/form";
 import Nav from "@/components/nav-bar/nav";
-import Dropdown from "@/components/dropdown/dropdown";
+// import Dropdown from "@/components/dropdown/dropdown";
 import FlightList from "@/components/availableFlights/availableFlights";
 import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import type { TransformedFlightOffer } from "@/types/selectedFlisghtData";
@@ -62,7 +62,7 @@ const Flight = (props: Props) => {
         );
         if (!res.ok) return null;
         const { data } = await res.json();
-        console.log(data);
+        // console.log(data);
         return {
           name: data[0].name,
           city: data[0].address?.cityName,
@@ -114,7 +114,7 @@ const Flight = (props: Props) => {
       <Nav />
       <div className="mt-10 p-6 md:px-16 max-w-[1440px] mx-auto">
         <FlightSearch />
-        <Dropdown />
+        {/* <Dropdown /> */}
         <div className="w-full mt-12 flex flex-col lg:flex-row items-start gap-10">
           <div className="w-full lg:w-[60%] xl:w-[66.62%]">
             <h4 className="mb-5 text-sm 2xl:text-xl font-medium text-gray-500">

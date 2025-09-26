@@ -169,7 +169,7 @@ const PassengerForm = (props: Props) => {
             value={formData.knownTravelerNumber}
             onChange={(e) => updateField("knownTravelerNumber", e.target.value)}
             type="text"
-            placeholder="Known traveller number*"
+            placeholder="Known traveller number"
             className="input"
           />
         </div>
@@ -269,17 +269,17 @@ const PassengerForm = (props: Props) => {
             </div>
           </div>
 
-          <div className="flex space-x-4 mt-[75px]">
+          {/* <div className="flex space-x-4 mt-[75px]">
             <button className="px-4 py-2 border border-[var(--color-purple-blue)] text-[var(--color-purple-blue)] rounded hover:bg-[var(--color-purple-blue)] hover:text-white">
               Save and close
             </button>
-            {/* <button
+            <button
               className="px-4 py-2 border-gray-400 bg-[#605DEC] text-gray-100 rounded disabled:opacity-50"
               disabled={!isFormValid}
             >
               Select seats
-            </button> */}
-          </div>
+            </button>
+          </div> */}
         </div>
       </form>
     </div>

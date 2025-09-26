@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { ExitRowIndicator } from "./exitrow";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -40,6 +40,22 @@ export const Cabin = () => {
     window.addEventListener("resize", checkScreen);
     return () => window.removeEventListener("resize", checkScreen);
   }, [flightId]);
+  const setSeatMap = useCallback(
+    (
+      updater:
+        | ((prev: Record<string, boolean>) => Record<string, boolean>)
+        | Record<string, boolean>
+    ) => {
+      setSeatData((prev) => ({
+        ...prev,
+        seatMap:
+          typeof updater === "function"
+            ? updater(prev?.seatMap || {})
+            : updater,
+      }));
+    },
+    []
+  );
 
   return (
     <div className="z-50">
@@ -54,6 +70,7 @@ export const Cabin = () => {
               key={rowNum}
               rowNumber={rowNum}
               seatMap={seatData?.seatMap}
+              setSeatMap={setSeatMap}
             />
           ))}
         </section>
@@ -65,6 +82,7 @@ export const Cabin = () => {
               key={rowNum}
               rowNumber={rowNum}
               seatMap={seatData?.seatMap}
+              setSeatMap={setSeatMap}
             />
           ))}
           <ExitRowIndicator />
@@ -73,6 +91,7 @@ export const Cabin = () => {
               key={rowNum}
               rowNumber={rowNum}
               seatMap={seatData?.seatMap}
+              setSeatMap={setSeatMap}
             />
           ))}
           <ExitRowIndicator />
@@ -81,6 +100,7 @@ export const Cabin = () => {
               key={rowNum}
               rowNumber={rowNum}
               seatMap={seatData?.seatMap}
+              setSeatMap={setSeatMap}
             />
           ))}
           <ExitRowIndicator />
@@ -89,6 +109,7 @@ export const Cabin = () => {
               key={rowNum}
               rowNumber={rowNum}
               seatMap={seatData?.seatMap}
+              setSeatMap={setSeatMap}
             />
           ))}
         </section>
