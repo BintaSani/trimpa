@@ -37,7 +37,7 @@ const FlightTable = ({ onFlightSelect }: FlightListProps) => {
           {transformedData.map((flight, index) => (
             <tr
               key={index}
-              className="border-b py-3 text-gray-400 cursor-pointer hover:bg-[#7C8DB010]"
+              className="border-b py-3 text-gray-400 cursor-pointer hover:bg-[#7C8DB030]"
               onClick={() => onFlightSelect(flight)}
             >
               <td className="p-3 flex items-center gap-3">

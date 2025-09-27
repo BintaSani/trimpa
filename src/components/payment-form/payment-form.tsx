@@ -66,8 +66,6 @@ const PaymentForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    localStorage.setItem("FlightId", flightId || "");
-
     const confirmationNumber = uuidv4().slice(0, 12).toUpperCase();
 
     const outboundSeatMapUpdate = outboundSeats.reduce(

@@ -58,13 +58,23 @@ export const SeatRow = ({
     }
   }, [currentLeg, outboundSeats, setSeatMap]);
 
-  const handleSeatClick = (seatName: string, isBusiness: boolean) => {
+  const handleSeatClick = (
+    seatName: string,
+    isBusiness: boolean,
+    isSelected: boolean
+  ) => {
     const toggle = () =>
       toggleSeat(seatName, isBusiness, currentLeg, totalPassengers);
     // seatMap[seatName] = true;
 
     if (isBusiness) {
-      showUpgradeModal(toggle);
+      if (isSelected) {
+        // already selected → just unselect
+        toggle();
+      } else {
+        // not selected → require upgrade
+        showUpgradeModal(toggle);
+      }
     } else {
       toggle();
     }
@@ -99,7 +109,7 @@ export const SeatRow = ({
           }`}
         onClick={() => {
           if (isTaken) return;
-          handleSeatClick(seatName, isBusinessClass);
+          handleSeatClick(seatName, isBusinessClass, isSelected);
         }}
       >
         {isSelected && !isTaken && <FaCheck size={12} />}

@@ -37,8 +37,22 @@ export const FlightProvider = ({ children }: { children: ReactNode }) => {
   );
   const [flightId, setFlightId] = useState<string | null>("null");
   useEffect(() => {
+    const stored = localStorage.getItem("selectedFlight");
+    const flight = localStorage.getItem("FlightId");
+    if (stored) {
+      setSelectedFlights(JSON.parse(stored));
+    }
+    if (flight) {
+      setFlightId(JSON.parse(flight));
+    }
+  }, []);
+
+  useEffect(() => {
     if (selectedFlights) {
       localStorage.setItem("selectedFlight", JSON.stringify(selectedFlights));
+    }
+    if (flightId) {
+      localStorage.setItem("FlightId", JSON.stringify(flightId));
     }
   }, [selectedFlights]);
 

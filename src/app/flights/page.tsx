@@ -123,19 +123,19 @@ const Flight = (props: Props) => {
               flight
             </h4>
             <FlightList onFlightSelect={handleFlightSelect} />
-            <div className="flex items-center justify-end mt-6">
+            {/* <div className="flex items-center justify-end mt-6">
               <button className="text-[var(--color-purple-blue)] border hover:bg-[var(--color-purple-blue)] hover:text-white rounded border-[var(--color-purple-blue)] text-sm px-5 py-[11.5px] 2xl:text-lg">
                 Show all flights
               </button>
-              {/* <button className="relative inline-flex items-center justify-start px-5 py-3 overflow-hidden font-bold rounded-full group">
+              <button className="relative inline-flex items-center justify-start px-5 py-3 overflow-hidden font-bold rounded-full group">
                 <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-red-500 opacity-[3%]"></span>
                 <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-red-800 opacity-100 group-hover:-translate-x-8"></span>
                 <span className="relative w-full text-left text-black transition-colors duration-200 ease-in-out group-hover:text-gray-900">
                   Button Text
                 </span>
                 <span className="absolute inset-0 border-2 border-white rounded-full"></span>
-              </button> */}
-            </div>
+              </button>
+            </div> */}
             <div className='w-full bg-[url("/images/map.webp")] bg-contain md:bg-fit 2xl:bg-cover h-[100px] bg-no-repeat mt-12 flex items-center justify-center md:h-[161px] xl:h-[171px]'>
               <div className="w-[110px] md:w-[180px] xl:w-[227px] text-[9px] flex items-center text-[#1513A0] mr-8 md:mt-7 lg:-mt-3 xl:mt-4 2xl:mt-12 font-bold md:text-xs justify-between">
                 <p>{from}</p>

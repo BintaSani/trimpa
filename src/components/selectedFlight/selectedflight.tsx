@@ -1,6 +1,5 @@
 import React from "react";
 import { TransformedFlightOffer } from "@/types/selectedFlisghtData";
-import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import Image from "next/image";
 
 type Props = {
@@ -8,8 +7,6 @@ type Props = {
 };
 
 const Selectedflight = ({ selectedFlight }: Props) => {
-  const { tripType } = useFlightSearchContext();
-
   return (
     <div className="w-full mt-12">
       <div className="border border-gray-300 rounded-md p-4 shadow-xs">
@@ -43,7 +40,7 @@ const Selectedflight = ({ selectedFlight }: Props) => {
             </div>
           </div>
 
-          {tripType !== "one-way" && (
+          {selectedFlight?.isOneWay && (
             <div className="flex border-t mt-2 pt-2 items-start justify-between">
               <div className="p-3 flex items-start gap-3">
                 <Image

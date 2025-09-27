@@ -90,7 +90,7 @@ const SignupModal = ({
   }
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-purple-blue)]/20 flex items-center justify-center z-100">
+    <div className="fixed p-7 inset-0 bg-[var(--color-purple-blue)]/20 flex items-center justify-center z-100">
       <div className="bg-white p-6 xl:p-10 rounded-lg shadow-lg max-w-[500px] w-full relative">
         {/* Close Button */}
         {/* Header */}

@@ -104,7 +104,7 @@ const PassengerInfo = (props: Props) => {
         setFlightId(Id);
         router.push("/select-seat"); // ✅ only runs if createFlight succeeds
       } else {
-        toast.error("User not authenticated");
+        toast.error("Please sign in to create a flight");
       }
     } catch (err) {
       console.error("Error creating flight:", err);

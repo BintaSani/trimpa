@@ -2,9 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { FlightCreateSeatData } from "@/types/createSeatData";
-import { useFlightSearchContext } from "../../../context/flightSearchContext";
 import { IoCloseSharp } from "react-icons/io5";
 import { useFlightSummaryContext } from "../../../context/flightSummaryContext";
+import { useFlightContext } from "../../../context/FlightContext";
 import { FlightCard, PaymentMethod, PriceBreakdown } from "./small-components";
 import { toast } from "react-toastify";
 import { FlightTicket } from "@/types/ticket";
@@ -16,8 +16,8 @@ import { generateTicketPDF } from "@/lib/pdfGenerator";
 
 const FlightSummaryComponent = () => {
   const [show, setShow] = useState(true);
-  const { tripType } = useFlightSearchContext();
   const { data, setData } = useFlightSummaryContext();
+  const { flightId } = useFlightContext();
   const router = useRouter();
   const additionalServicesAmount =
     data?.price?.additionalServices?.[0]?.amount ?? "0";
@@ -141,9 +141,8 @@ const FlightSummaryComponent = () => {
   };
 
   useEffect(() => {
-    const flightId = localStorage.getItem("FlightId") || "";
     const fetchFlight = async () => {
-      const docRef = doc(db, "flights", flightId);
+      const docRef = doc(db, "flights", flightId || "");
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -222,7 +221,7 @@ const FlightSummaryComponent = () => {
         />
       </div>
 
-      {tripType === "round-trip" && (
+      {!data?.oneWay && (
         <div className="mb-14">
           <h4 className="text-lg font-medium">
             Returning {formatDate(data?.returnDepartureDate || "")}
