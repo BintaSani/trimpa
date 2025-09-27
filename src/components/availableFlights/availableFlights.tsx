@@ -15,7 +15,7 @@ const FlightTable = ({ onFlightSelect }: FlightListProps) => {
     return <div className="animate-pulse">Loading flights...</div>;
   }
   if (Array.isArray(flightData) && flightData.length === 0) {
-    return <div>No flights available</div>;
+    return <div>No flights currently available</div>;
   }
 
   const transformedData: TransformedFlightOffer[] =
