@@ -67,11 +67,11 @@ const FlightSearch = (props: Props) => {
       const data = await response.json();
       const flightData = data.data;
       // console.log("headers", response.headers);
-      if (flightData.length > 0) {
+     // if (flightData.length > 0) {
         if (setFlightData) {
           setFlightData(data);
         }
-      }
+   //   }
     } catch (err: any) {
       setError(err.message);
     } finally {
