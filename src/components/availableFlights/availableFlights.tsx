@@ -14,13 +14,13 @@ const FlightTable = ({ onFlightSelect }: FlightListProps) => {
   if (!flightData) {
     return <div className="animate-pulse">Loading flights...</div>;
   }
-  if (flightData.length === 0) {
-    return <div>No flights currently available</div>;
-  }
 
   const transformedData: TransformedFlightOffer[] =
     transformFlightOffers(flightData);
   // onClick={() => onFlightSelect(flight)}
+  if (transformedData.length === 0) {
+    return <div>No flights currently available</div>;
+  }
 
   return (
     <div className="w-full max-w-[872px] mx-auto h-[456px] whitespace-nowrap overflow-auto bg-white border shadow-lg rounded-lg p-4">
