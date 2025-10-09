@@ -40,7 +40,7 @@ const Selectedflight = ({ selectedFlight }: Props) => {
             </div>
           </div>
 
-          {selectedFlight?.isOneWay && (
+          {!selectedFlight?.isOneWay && (
             <div className="flex border-t mt-2 pt-2 items-start justify-between">
               <div className="p-3 flex items-start gap-3">
                 <Image

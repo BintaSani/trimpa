@@ -3,6 +3,13 @@ export type AdditionalService = {
   amount: string;
 };
 
+export interface PassengerForm {
+  bags: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 export interface FlightCreateSeatData {
   flightId: string;
   returnFlightId?: string;
@@ -39,12 +46,7 @@ export interface FlightCreateSeatData {
     CardNumber: string;
     ExpiryDate: string;
   };
-  formData: {
-    bags: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
+  formData: PassengerForm[];
   stops: {
     outboundStops: {
       duration: string;

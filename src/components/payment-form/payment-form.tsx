@@ -37,20 +37,20 @@ const PaymentForm = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Initialize card info if not already set
-    if (billingSame) {
-      updateField("name", formData.firstName + " " + formData.lastName);
+    if (formData.length > 0) {
+      const primaryPassenger = formData[0]; // Passenger 1 (Adult 1)
+
+      if (billingSame) {
+        updateField(
+          "name",
+          primaryPassenger.firstName + " " + primaryPassenger.lastName
+        );
+      }
+      if (saveCard) {
+        updateField("email", primaryPassenger.email);
+      }
     }
-    if (saveCard) {
-      updateField("email", formData.email);
-    }
-  }, [
-    cardInfo,
-    updateField,
-    formData.firstName,
-    formData.lastName,
-    formData.email,
-  ]);
+  }, [billingSame, saveCard, formData, updateField]);
 
   const handleInput = (e: {
     target: { name: any; value: any; type: any; checked: any };

@@ -38,7 +38,7 @@ export const AirplaneBody: React.FC = () => {
         alt="plane"
         sizes="100vw"
         layout="responsive"
-        className="w-full relative hidden 3xl:block h-full"
+        className="w-full relative hidden 3xl:block  h-full"
       />
     </div>
   );

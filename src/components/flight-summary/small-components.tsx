@@ -87,6 +87,7 @@ export const PriceBreakdown = ({
   seatClassOut,
   seatClassReturn,
   AdditionalServices,
+  passengers,
 }: {
   departure: number;
   returnPrice: number;
@@ -95,11 +96,14 @@ export const PriceBreakdown = ({
   seatClassOut: string;
   seatClassReturn: string;
   AdditionalServices?: string | undefined;
+  passengers: number;
 }) => {
-  const bag = bags > 1 ? Number(AdditionalServices) * (bags - 1) : 0;
+  const bag =
+    bags > 1 && passengers === 1 ? Number(AdditionalServices) * (bags - 1) : 0;
   const business = seatClassOut === "Business" ? 199 : 0;
   const businessReturn = seatClassReturn === "Business" ? 199 : 0;
-  const subtotal = departure + returnPrice + bag + business + businessReturn;
+  const subtotal =
+    departure + returnPrice + bag + business + businessReturn * passengers;
 
   const taxes = subtotal * 0.094; // 9.4% tax
   const total = subtotal + taxes;

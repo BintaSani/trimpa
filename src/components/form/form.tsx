@@ -67,11 +67,11 @@ const FlightSearch = (props: Props) => {
       const data = await response.json();
       const flightData = data.data;
       // console.log("headers", response.headers);
-     // if (flightData.length > 0) {
-        if (setFlightData) {
-          setFlightData(data);
-        }
-   //   }
+      // if (flightData.length > 0) {
+      if (setFlightData) {
+        setFlightData(data);
+      }
+      //   }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -143,7 +143,7 @@ const FlightSearch = (props: Props) => {
         fetchIataCodes(keyword);
         setIsOpen(true);
       }
-    }, 1000);
+    }, 500);
   };
 
   return (
@@ -295,7 +295,7 @@ const FlightSearch = (props: Props) => {
         {/* Search Button */}
         <button
           onClick={handleSearch}
-          className={`${isLoading && "cursor-not-allowed animate-pulse"} bg-[var(--color-purple-blue)] hover:scale-105 text-white px-5 py-3 h-full rounded-md`}
+          className={`${isLoading && "cursor-not-allowed "} bg-[var(--color-purple-blue)] hover:scale-105 text-white px-5 py-3 h-full rounded-md`}
           disabled={isLoading}
         >
           {isLoading ? "Searching..." : "Search"}

@@ -183,7 +183,7 @@ const SeatSelection = (props: Props) => {
         <div>
           <p className="text-sm text-gray-400 font-semibold">Passenger 1</p>
           <p className="text-gray-600 text-lg">
-            {formData?.firstName} {formData?.lastName}
+            {formData[0]?.firstName} {formData[0]?.lastName}
           </p>
         </div>
         <div className="text-left mt-2 md:mt-0">

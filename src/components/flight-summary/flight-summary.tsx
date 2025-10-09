@@ -19,6 +19,7 @@ const FlightSummaryComponent = () => {
   const { data, setData } = useFlightSummaryContext();
   const { flightId } = useFlightContext();
   const router = useRouter();
+  const passengers = data?.formData.length || 1;
   const additionalServicesAmount =
     data?.price?.additionalServices?.[0]?.amount ?? "0";
   const sendEmail = async () => {
@@ -28,7 +29,11 @@ const FlightSummaryComponent = () => {
     }
     const qr = `Booking Reference: ${data?.confirmationNumber || ""}`;
     const qrCodeUrl = await QRCode.toDataURL(qr);
-    const bags = data?.formData?.bags || 0;
+    const bags =
+      data?.formData?.reduce(
+        (sum, passenger) => sum + (passenger.bags || 0),
+        0
+      ) || 0;
     const seatClassOut =
       data?.outgoingClass === "Business" ? "Business" : "Economy";
 
@@ -41,7 +46,7 @@ const FlightSummaryComponent = () => {
     const bag = bags > 1 ? Number(AdditionalServices) * (bags - 1) : 0;
     const business = seatClassOut === "Business" ? 199 : 0;
     const businessReturn = seatClassReturn === "Business" ? 199 : 0;
-    const subtotal = Price + bag + business + businessReturn;
+    const subtotal = Price + bag + business + businessReturn * passengers;
 
     const taxes = subtotal * 0.094; // 9.4% tax
 
@@ -49,10 +54,14 @@ const FlightSummaryComponent = () => {
     try {
       // Prepare ticket data
       const ticketData: FlightTicket = {
-        id: `${data?.airline?.airlineName || ""}${data?.flightId || ""}-${data?.departureDate || ""}-${data?.formData?.firstName || ""}`,
-        passengerName:
-          `${data?.formData?.firstName || ""} ${data?.formData?.lastName || ""}`.trim(),
-        email: data?.formData?.email || "default@email.com",
+        id: `${data?.airline?.airlineName || ""}${data?.flightId || ""}-${data?.departureDate || ""}-${data?.formData?.map((p) => p.firstName).join(", ") || ""}`,
+        passengerName: `${
+          data?.formData
+            ?.map((p) => `${p.firstName} ${p.lastName}`)
+            .join(", ") || ""
+        }`.trim(),
+        email:
+          data?.formData?.map((p) => p.email).join(", ") || "default@email.com",
         flightNumber: `${data?.flightId || ""}`,
         airlineName: data?.airline?.airline || "",
         airline: data?.airline?.airlineName || "",
@@ -117,8 +126,8 @@ const FlightSummaryComponent = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          to_email: ticketData.email,
-          to_name: ticketData.passengerName,
+          to_email: data.formData[0].email,
+          to_name: data.formData[0].firstName + " " + data.formData[0].lastName,
           pdfBase64: pdfBase64,
           ticketData: ticketData,
         }),
@@ -128,6 +137,7 @@ const FlightSummaryComponent = () => {
 
       if (res.ok) {
         toast.success("Ticket sent successfully!");
+        toast.info("Redirecting to homepage...");
         router.push("/");
         localStorage.clear();
       } else {
@@ -182,7 +192,7 @@ const FlightSummaryComponent = () => {
         </div>
       )}
       <h3 className="text-[var(--color-purple-blue)] text-2xl font-bold">
-        Bon voyage, {data?.formData.firstName}!
+        Bon voyage, {data?.formData[0].firstName}!
       </h3>
       <h4 className="text-gray-600 font-semibold text-sm my-4">
         Confirmation number: #{data?.confirmationNumber}
@@ -217,7 +227,12 @@ const FlightSummaryComponent = () => {
           }
           currency={data?.price.currency}
           typeOfTrip={data?.oneWay ? "one way" : "round trip"}
-          bags={data?.formData?.bags || 0}
+          bags={
+            data?.formData?.reduce(
+              (sum, passenger) => sum + (passenger.bags || 0),
+              0
+            ) || 0
+          }
         />
       </div>
 
@@ -244,7 +259,12 @@ const FlightSummaryComponent = () => {
             }
             currency={data?.price.currency}
             typeOfTrip={data?.oneWay ? "one way" : "round trip"}
-            bags={data?.formData?.bags || 0}
+            bags={
+              data?.formData?.reduce(
+                (sum, passenger) => sum + (passenger.bags || 0),
+                0
+              ) || 0
+            }
           />
         </div>
       )}
@@ -262,7 +282,12 @@ const FlightSummaryComponent = () => {
             : Number(data?.price.totalCost)
         }
         currency={data?.price.currency}
-        bags={data?.formData?.bags || 0}
+        bags={
+          data?.formData?.reduce(
+            (sum, passenger) => sum + (passenger.bags || 0),
+            0
+          ) || 0
+        }
         seatClassOut={
           data?.outgoingClass === "Business" ? "Business" : "Economy"
         }
@@ -270,6 +295,7 @@ const FlightSummaryComponent = () => {
           data?.returningClass === "Business" ? "Business" : "Economy"
         }
         AdditionalServices={additionalServicesAmount}
+        passengers={passengers}
       />
 
       <h4 className="text-2xl font-semibold mt-8 mb-6">Payment method</h4>
