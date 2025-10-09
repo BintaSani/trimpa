@@ -138,8 +138,8 @@ const FlightSummaryComponent = () => {
       if (res.ok) {
         toast.success("Ticket sent successfully!");
         toast.info("Redirecting to homepage...");
-        router.push("/");
         localStorage.clear();
+        router.push("/");
       } else {
         console.error(result.error);
         toast.error("Failed to send ticket.");

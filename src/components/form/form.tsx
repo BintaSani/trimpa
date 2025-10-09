@@ -81,21 +81,35 @@ const FlightSearch = (props: Props) => {
 
   const fetchIataCodes = async (keyword: string) => {
     if (loading || !token) return;
-    const res = await fetch(
-      `https://test.api.amadeus.com/v1/reference-data/locations?keyword=${keyword}&subType=CITY,AIRPORT`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
+
+    try {
+      const res = await fetch(
+        `https://test.api.amadeus.com/v1/reference-data/locations?keyword=${keyword}&subType=CITY,AIRPORT`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch IATA codes: ${res.statusText}`);
       }
-    );
 
-    const data = await res.json();
-    const cleaned = data.data.map((entry: any) => ({
-      name: entry.name,
-      iataCode: entry.iataCode,
-      country: entry.address.countryName,
-    }));
+      const data = await res.json();
 
-    setAirports(cleaned);
+      if (!data?.data || !Array.isArray(data.data)) {
+        throw new Error("Invalid response format from API");
+      }
+
+      const cleaned = data.data.map((entry: any) => ({
+        name: entry.name,
+        iataCode: entry.iataCode,
+        country: entry.address?.countryName || "Unknown",
+      }));
+
+      setAirports(cleaned);
+    } catch (error) {
+      toast.error("Failed to fetch airport data. Please try again.");
+    }
   };
 
   const handleSelect = (iataCode: string, name: string, country: string) => {

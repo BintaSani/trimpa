@@ -16,22 +16,30 @@ const SeatSelection = (props: Props) => {
   const { outboundSeats, returnSeats, seatClass } = useSeat();
   const { selectedFlights, currentLeg, setCurrentLeg } = useFlightContext();
   const { formData } = usePassengerForm();
-  const { tripType } = useFlightSearchContext();
+  const { tripType, adults, minors } = useFlightSearchContext();
   const selectedSeats = [outboundSeats, returnSeats].flat();
   const router = useRouter();
-
+  const totalPassengers = adults + minors;
   const [loading, setLoading] = useState(false);
+  const [resetFlag, setResetFlag] = useState(false);
+  let currentPassengerIndex = Math.min(
+    resetFlag ? 0 : selectedSeats.length,
+    totalPassengers - 1
+  );
 
   const handlePayment = () => {
     setLoading(true);
     router.push("/payment"); // waits for navigation
   };
+  // if we’ve just switched to return flight, start from 0 temporarily
 
   const handleNextFlight = () => {
     if (tripType === "round-trip" && currentLeg === "outgoing") {
       // handleSeatSelection();
       setCurrentLeg?.("return");
+      setResetFlag(true);
       // Clear previous selections or reset seat selection state if needed
+
       // For example: clear seatClass or selectedSeats if you store separately per leg
     } else {
       // If it's not a round-trip, or we're already on return leg
@@ -46,6 +54,9 @@ const SeatSelection = (props: Props) => {
       JSON.stringify([outboundSeats, returnSeats])
     );
   };
+  if (resetFlag && selectedSeats.length > 0) {
+    setResetFlag(false);
+  }
   return (
     <div className=" relative bg-blur backdrop-blur-md md:h-screen flex flex-col justify-between">
       {/* Flight Header */}
@@ -181,9 +192,12 @@ const SeatSelection = (props: Props) => {
       {/* Passenger Footer */}
       <div className="flex flex-col md:flex-row px-4 md:px-6 bg-[#CBD4E6]/30 md:items-center md:justify-between border-t py-4 mt-4 text-sm text-gray-600">
         <div>
-          <p className="text-sm text-gray-400 font-semibold">Passenger 1</p>
+          <p className="text-sm text-gray-400 font-semibold">
+            Passenger {currentPassengerIndex + 1}
+          </p>
           <p className="text-gray-600 text-lg">
-            {formData[0]?.firstName} {formData[0]?.lastName}
+            {formData[currentPassengerIndex]?.firstName}{" "}
+            {formData[currentPassengerIndex]?.lastName}
           </p>
         </div>
         <div className="text-left mt-2 md:mt-0">
@@ -211,7 +225,11 @@ const SeatSelection = (props: Props) => {
           </button>
           <button
             onClick={handleNextFlight}
-            disabled={selectedSeats.length === 0 || loading}
+            disabled={
+              selectedSeats.length === 0 ||
+              selectedSeats.length < totalPassengers ||
+              loading
+            }
             type="button"
             className="px-5 py-[13px] text-base disabled:bg-gray-400/30 border-gray-400 bg-[#605DEC] text-white  disabled:text-gray-400 disabled:border-gray-400 rounded"
           >
